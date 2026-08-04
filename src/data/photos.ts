@@ -6,7 +6,6 @@ import terrierWindowLight from '../assets/photos/terrier-window-light.jpg';
 import greenhousesNight from '../assets/photos/greenhouses-night.jpg';
 import beachMotelDiptych from '../assets/photos/beach-motel-diptych.jpg';
 import domeSnow from '../assets/photos/dome-snow.jpg';
-import fogSunriseOutcrop from '../assets/photos/fog-sunrise-outcrop.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -49,11 +48,6 @@ export const photos: Photo[] = [
   {
     src: domeSnow,
     alt: 'Grainy black-and-white photo of a domed brick building behind a snow-covered lawn',
-    caption: '',
-  },
-  {
-    src: fogSunriseOutcrop,
-    alt: 'Golden fog over bare trees at sunrise, seen from a rock outcrop',
     caption: '',
   },
 ];
