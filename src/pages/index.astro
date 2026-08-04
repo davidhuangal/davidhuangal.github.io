@@ -51,6 +51,15 @@ const firstAuthor = publications.filter((p) => p.firstAuthor);
         firstAuthor.map((pub) => (
           <li>
             <span class="tnum">[{pub.year}]</span> <a href={pub.url}>{pub.title}</a>
+            <span class="sub-line">
+              {pub.authors.map((author, i) => (
+                <>
+                  {i > 0 && ', '}
+                  {author === 'David Huangal' ? <strong>{author}</strong> : author}
+                </>
+              ))}
+            </span>
+            <span class="sub-line venue">{pub.venue}</span>
           </li>
         ))
       }
@@ -144,6 +153,15 @@ const firstAuthor = publications.filter((p) => p.firstAuthor);
 
   .meta {
     font-size: var(--text-sm);
+  }
+
+  .sub-line strong {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  .venue {
+    font-size: var(--text-xs);
   }
 
   @media (min-width: 640px) {
