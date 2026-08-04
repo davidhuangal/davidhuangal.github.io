@@ -32,7 +32,6 @@ const selected = publications.filter((p) => p.selected).sort((a, b) => b.year - 
     </figure>
     <div class="intro-text">
       <h1>David Huangal</h1>
-      <p class="tagline muted">Applied AI · Remote Sensing · University of Missouri</p>
       <p>
         I'm an AI researcher and technical lead at the University of Missouri's Center for
         Geospatial Intelligence. My work focuses on computer vision and building accurate,
@@ -149,16 +148,7 @@ const selected = publications.filter((p) => p.selected).sort((a, b) => b.year - 
     max-width: var(--measure);
   }
 
-  .intro h1 {
-    margin-bottom: var(--space-2xs);
-  }
-
-  .tagline {
-    margin: 0 0 var(--space-md);
-    font-size: var(--text-sm);
-  }
-
-  .intro-text p:not(.tagline) {
+  .intro-text p {
     margin: 0 0 var(--space-md);
   }
 
