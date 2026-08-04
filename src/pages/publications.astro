@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { publications } from '../data/publications';
+import { talks } from '../data/talks';
 
 const firstAuthor = publications.filter((p) => p.firstAuthor);
 const coAuthor = publications.filter((p) => !p.firstAuthor);
@@ -43,6 +44,22 @@ const sections = [
       </section>
     ))
   }
+  <section aria-labelledby="h-talks">
+    <h2 id="h-talks">Talks <span class="count tnum muted">({talks.length})</span></h2>
+    <ol class="doc-list">
+      {
+        talks.map((talk) => (
+          <li>
+            <span class="tnum">[{talk.year}]</span> <a href={talk.url}>{talk.title}</a>
+            <span class="sub-line">
+              {talk.event} · {talk.location}
+            </span>
+            {talk.note && <span class="sub-line venue">{talk.note}</span>}
+          </li>
+        ))
+      }
+    </ol>
+  </section>
 </Base>
 
 <style>
