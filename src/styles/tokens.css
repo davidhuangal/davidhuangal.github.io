@@ -1,38 +1,39 @@
-/* Hallmark · genre: editorial · macrostructure: Index-First · theme: Newsprint · enrichment: none · nav: N6 · footer: Ft4
- * N6 knobs: issue line=below wordmark, wordmark size=2xl, rule=double
- * Ft4 knobs: family=monospace, layout=single block, includes=date+attribution
- * tone: editorial · anchor hue: warm 85 / accent oxblood 25
- * Hallmark · pre-emit critique: P4 H4 E4 S4 R5 V4 */
+/* Hallmark · genre: editorial · macrostructure: Long Document · theme: studied-DNA (source: https://jxmo.io/) · design-system: design.md · designed-as-app
+ * paper oklch(100% 0 0) · accent moss oklch(42% 0.08 145) — source #9B0000 swapped to moss at user request
+ * type: single system-grotesk family, weight-led hierarchy (headings 800 at 1.4–1.8em) · nav: bare text row · footer: minimal end-matter (design.md variant)
+ * studied: yes · DNA-source: url (https://jxmo.io/)
+ * Hallmark · pre-emit critique: P4 H5 E4 S4 R5 V4 */
 
 :root {
-  /* paper + ink — warm anchor (hue 85), oxblood accent (hue 25) */
-  --color-paper: oklch(97% 0.008 85);
-  --color-paper-2: oklch(94% 0.01 85);
-  --color-rule: oklch(85% 0.012 85);
-  --color-neutral: oklch(48% 0.012 70);
-  --color-muted: oklch(38% 0.012 70);
-  --color-ink: oklch(21% 0.014 60);
-  --color-accent: oklch(45% 0.14 25);
-  --color-focus: oklch(50% 0.15 25);
-  --color-code-bg: oklch(93.5% 0.009 85);
+  /* paper + ink — plain white, weight does the work; moss accent is the only color */
+  --color-paper: oklch(100% 0 0);
+  --color-paper-2: oklch(95% 0 0);
+  --color-rule: oklch(85% 0 0);
+  --color-neutral: oklch(50% 0 0);
+  --color-muted: oklch(40% 0 0);
+  --color-ink: oklch(22% 0 0);
+  --color-accent: oklch(42% 0.08 145);
+  --color-focus: oklch(45% 0.1 145);
+  --color-code-bg: oklch(96% 0 0);
   /* figure plate stays light in both schemes — paper figures are drawn on white */
-  --color-figure-bg: oklch(98% 0.005 85);
+  --color-figure-bg: oklch(99% 0 0);
 
-  /* type */
-  --font-display: 'Newsreader Variable', ui-serif, Georgia, serif;
-  --font-body: 'Source Serif 4 Variable', ui-serif, Georgia, serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
+  /* type — single family is the design; mono only for code */
+  --font-body: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+  --font-display: var(--font-body);
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
-  /* scale — major third (1.25) */
+  /* scale — deliberately flat: hierarchy comes from weight 800, not size */
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
-  --text-base: 1.0625rem;
-  --text-md: 1.25rem;
-  --text-lg: 1.5625rem;
-  --text-xl: 1.9531rem;
-  --text-2xl: 2.4414rem;
-  --text-3xl: 3.0518rem;
-  --text-display: clamp(2.4rem, 4vw + 1rem, 3.75rem);
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.2rem;
+  --text-xl: 1.4rem;
+  --text-2xl: 1.8rem;
+  --text-3xl: 2rem;
+  --text-display: clamp(1.8rem, 2vw + 1rem, 2.25rem);
 
   /* space — 4pt */
   --space-3xs: 0.125rem;
@@ -53,20 +54,25 @@
   --dur-micro: 120ms;
   --dur-short: 220ms;
 
+  --radius-card: 8px;
+  --radius-pill: 999px;
+  --radius-input: 6px;
+
   --page-gutter: clamp(1rem, 4vw, 2rem);
   --measure: 65ch;
 }
 
+/* design.md variant: dark scheme derived from the system — neutral near-black paper, moss lifted for contrast */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-paper: oklch(15% 0.01 60);
-    --color-paper-2: oklch(18% 0.011 60);
-    --color-rule: oklch(31% 0.012 60);
-    --color-neutral: oklch(67% 0.01 70);
-    --color-muted: oklch(76% 0.008 75);
-    --color-ink: oklch(93% 0.008 85);
-    --color-accent: oklch(70% 0.11 28);
-    --color-focus: oklch(72% 0.12 28);
-    --color-code-bg: oklch(19.5% 0.011 60);
+    --color-paper: oklch(16% 0 0);
+    --color-paper-2: oklch(20% 0 0);
+    --color-rule: oklch(32% 0 0);
+    --color-neutral: oklch(66% 0 0);
+    --color-muted: oklch(75% 0 0);
+    --color-ink: oklch(93% 0 0);
+    --color-accent: oklch(75% 0.09 145);
+    --color-focus: oklch(78% 0.1 145);
+    --color-code-bg: oklch(20% 0 0);
   }
 }

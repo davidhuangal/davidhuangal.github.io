@@ -33,7 +33,7 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
         {note.data.paperTitle}
         {note.data.paperAuthors && <span class="authors"> — {note.data.paperAuthors}</span>}
       </p>
-      <p class="note-meta mono">
+      <p class="note-meta muted">
         Paper {note.data.paperYear} · {topicLabel} · Notes,{' '}
         <time datetime={note.data.date.toISOString()}>{dateFmt.format(note.data.date)}</time>
       </p>
@@ -46,6 +46,7 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
 </Base>
 
 <style>
+  /* Hallmark · design-system: design.md · designed-as-app */
   .note-head {
     padding-block: var(--space-xl) var(--space-lg);
     border-bottom: var(--rule-hair) solid var(--color-rule);
@@ -71,10 +72,7 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
 
   .note-meta {
     margin: 0;
-    font-size: var(--text-xs);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--color-neutral);
+    font-size: var(--text-sm);
   }
 
   .back {

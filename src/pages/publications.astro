@@ -15,33 +15,28 @@ const sections = [
   title="Publications · David Huangal"
   description="Publications by David Huangal on semantic segmentation, remote sensing, and UAS imagery analysis, in IEEE, SPIE, and MDPI venues."
 >
+  <section class="intro">
+    <h1>Publications</h1>
+  </section>
   {
     sections.map((section) => (
       <section aria-labelledby={`h-${section.heading.toLowerCase()}`}>
-        <header class="head-hang">
-          <h2 id={`h-${section.heading.toLowerCase()}`}>
-            {section.heading} <span class="count tnum">({section.pubs.length})</span>
-          </h2>
-        </header>
-        <ol class="index-list pub-list">
+        <h2 id={`h-${section.heading.toLowerCase()}`}>
+          {section.heading} <span class="count tnum muted">({section.pubs.length})</span>
+        </h2>
+        <ol class="doc-list">
           {section.pubs.map((pub) => (
             <li>
-              <div class="pub">
-                <p class="pub-title">
-                  <a href={pub.url}>{pub.title}</a>
-                </p>
-                <p class="pub-authors">
-                  {pub.authors.map((author, i) => (
-                    <>
-                      {i > 0 && ', '}
-                      {author === 'David Huangal' ? <strong>{author}</strong> : author}
-                    </>
-                  ))}
-                </p>
-                <p class="pub-venue mono">
-                  <span class="tnum">{pub.year}</span> · {pub.venue}
-                </p>
-              </div>
+              <span class="tnum">[{pub.year}]</span> <a href={pub.url}>{pub.title}</a>
+              <span class="sub-line">
+                {pub.authors.map((author, i) => (
+                  <>
+                    {i > 0 && ', '}
+                    {author === 'David Huangal' ? <strong>{author}</strong> : author}
+                  </>
+                ))}
+              </span>
+              <span class="sub-line venue">{pub.venue}</span>
             </li>
           ))}
         </ol>
@@ -51,52 +46,27 @@ const sections = [
 </Base>
 
 <style>
-  .count {
-    color: var(--color-neutral);
-    font-weight: 400;
+  /* Hallmark · design-system: design.md · designed-as-app */
+  .intro {
+    padding-top: var(--space-xl);
   }
 
-  .pub {
-    padding-block: var(--space-md);
+  .count {
+    font-weight: 400;
+    font-size: var(--text-base);
+  }
+
+  .doc-list {
+    list-style: disc;
     max-width: var(--measure);
   }
 
-  .pub p {
-    margin: 0;
-  }
-
-  .pub-title {
-    font-size: var(--text-md);
-    line-height: 1.35;
-    margin-bottom: var(--space-2xs);
-  }
-
-  .pub-title a {
-    font-family: var(--font-display);
-    font-weight: 600;
-    color: var(--color-ink);
-    text-decoration: none;
-  }
-
-  .pub-title a:hover {
-    color: var(--color-accent);
-  }
-
-  .pub-authors {
-    font-size: var(--text-sm);
-    color: var(--color-neutral);
-    line-height: 1.5;
-    margin-bottom: var(--space-2xs);
-  }
-
-  .pub-authors strong {
+  .sub-line strong {
     color: var(--color-ink);
     font-weight: 600;
   }
 
-  .pub-venue {
+  .venue {
     font-size: var(--text-xs);
-    color: var(--color-neutral);
-    letter-spacing: 0.02em;
   }
 </style>
