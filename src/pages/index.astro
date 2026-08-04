@@ -84,7 +84,8 @@ const firstAuthor = publications.filter((p) => p.firstAuthor);
         projects.map((project) => (
           <li>
             <a href={project.url}>{project.name}</a>
-            <span class="sub-line">{project.meta}</span>
+            <span class="meta muted"> · {project.meta}</span>
+            <span class="sub-line">{project.description}</span>
           </li>
         ))
       }
@@ -139,6 +140,10 @@ const firstAuthor = publications.filter((p) => p.firstAuthor);
 
   .intro-text p:not(.tagline) {
     margin: 0;
+  }
+
+  .meta {
+    font-size: var(--text-sm);
   }
 
   @media (min-width: 640px) {
