@@ -5,6 +5,8 @@ export interface Publication {
   year: number;
   url: string;
   firstAuthor: boolean;
+  /** Featured on the homepage: first-author work plus the most cited / most interesting. */
+  selected?: boolean;
 }
 
 // Bolding of "David Huangal" is handled at render time by matching the name.
@@ -16,6 +18,7 @@ export const publications: Publication[] = [
     year: 2026,
     url: 'https://www.mdpi.com/2072-4292/18/8/1188',
     firstAuthor: true,
+    selected: true,
   },
   {
     title: 'Evaluation of Road Segmentation Techniques on Visible and Infrared Low-Altitude UAS Imagery',
@@ -24,6 +27,7 @@ export const publications: Publication[] = [
     year: 2022,
     url: 'https://ieeexplore.ieee.org/abstract/document/9884542',
     firstAuthor: true,
+    selected: true,
   },
   {
     title: 'Evaluating Deep Road Segmentation Techniques for Low-Altitude UAS Imagery',
@@ -32,6 +36,7 @@ export const publications: Publication[] = [
     year: 2020,
     url: 'https://www.spiedigitallibrary.org/conference-proceedings-of-spie/11413/2557610/Evaluating-deep-road-segmentation-techniques-for-low-altitude-UAS-imagery/10.1117/12.2557610.full',
     firstAuthor: true,
+    selected: true,
   },
   {
     title: 'Semantic Segmentation of Burned Areas in Sentinel-2 Satellite Imagery Using Deep Learning Transformer and Convolutional Attention Networks',
@@ -40,6 +45,7 @@ export const publications: Publication[] = [
     year: 2025,
     url: 'https://ieeexplore.ieee.org/document/11071946',
     firstAuthor: false,
+    selected: true,
   },
   {
     title: 'Semantic Segmentation of Burned Areas in Sentinel-2 Satellite Images Using Deep Learning Models',
@@ -48,6 +54,7 @@ export const publications: Publication[] = [
     year: 2023,
     url: 'https://ieeexplore.ieee.org/abstract/document/10282323',
     firstAuthor: false,
+    selected: true,
   },
   {
     title: 'Evaluating Visuospatial Features for Tracking Hazards in Overhead UAS Imagery',

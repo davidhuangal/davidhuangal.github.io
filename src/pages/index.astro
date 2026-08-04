@@ -10,7 +10,7 @@ const notes = (await getCollection('notes')).sort(
 const recentNotes = notes
   .slice(0, 5)
   .sort((a, b) => b.data.paperYear - a.data.paperYear);
-const firstAuthor = publications.filter((p) => p.firstAuthor);
+const selected = publications.filter((p) => p.selected).sort((a, b) => b.year - a.year);
 ---
 
 <Base
@@ -45,10 +45,10 @@ const firstAuthor = publications.filter((p) => p.firstAuthor);
   <hr />
 
   <section aria-labelledby="h-pubs">
-    <h2 id="h-pubs">First-Author Publications</h2>
+    <h2 id="h-pubs">Selected Publications</h2>
     <ul class="doc-list">
       {
-        firstAuthor.map((pub) => (
+        selected.map((pub) => (
           <li>
             <span class="tnum">[{pub.year}]</span> <a href={pub.url}>{pub.title}</a>
             <span class="sub-line">
