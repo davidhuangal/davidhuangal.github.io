@@ -9,9 +9,9 @@ interface Props {
 const { title, description } = Astro.props;
 const nav = [
   { href: '/', label: 'Home' },
-  { href: '/notes/', label: 'Paper Notes' },
   { href: '/publications/', label: 'Publications' },
   { href: '/projects/', label: 'Projects' },
+  { href: '/notes/', label: 'Paper Notes' },
 ];
 const { pathname } = Astro.url;
 const isCurrent = (href: string) =>

@@ -44,23 +44,6 @@ const firstAuthor = publications.filter((p) => p.firstAuthor);
 
   <hr />
 
-  <section aria-labelledby="h-notes">
-    <h2 id="h-notes">Paper Notes</h2>
-    <ul class="doc-list">
-      {
-        recentNotes.map((note) => (
-          <li>
-            <span class="tnum">[{note.data.paperYear}]</span>{' '}
-            <a href={`/notes/${note.id}/`}>{note.data.title}</a>
-          </li>
-        ))
-      }
-    </ul>
-    <p class="link-cta"><a href="/notes/">All {notes.length} notes, by topic →</a></p>
-  </section>
-
-  <hr />
-
   <section aria-labelledby="h-pubs">
     <h2 id="h-pubs">First-Author Publications</h2>
     <ul class="doc-list">
@@ -90,6 +73,23 @@ const firstAuthor = publications.filter((p) => p.firstAuthor);
         ))
       }
     </ul>
+  </section>
+
+  <hr />
+
+  <section aria-labelledby="h-notes">
+    <h2 id="h-notes">Paper Notes</h2>
+    <ul class="doc-list">
+      {
+        recentNotes.map((note) => (
+          <li>
+            <span class="tnum">[{note.data.paperYear}]</span>{' '}
+            <a href={`/notes/${note.id}/`}>{note.data.title}</a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="link-cta"><a href="/notes/">All {notes.length} notes, by topic →</a></p>
   </section>
 </Base>
 
