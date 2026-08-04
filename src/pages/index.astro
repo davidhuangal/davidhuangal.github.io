@@ -11,12 +11,37 @@ const recentNotes = notes
   .slice(0, 5)
   .sort((a, b) => b.data.paperYear - a.data.paperYear);
 const selected = publications.filter((p) => p.selected).sort((a, b) => b.year - a.year);
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'David Huangal',
+  url: 'https://davidhuangal.github.io/',
+  image: 'https://davidhuangal.github.io/images/david.jpg',
+  jobTitle: 'AI Researcher and Technical Lead',
+  worksFor: {
+    '@type': 'Organization',
+    name: "University of Missouri Center for Geospatial Intelligence",
+  },
+  alumniOf: {
+    '@type': 'CollegeOrUniversity',
+    name: 'University of Missouri - Columbia',
+  },
+  email: 'mailto:davidbhuangal@gmail.com',
+  sameAs: [
+    'https://github.com/davidhuangal',
+    'https://scholar.google.com/citations?user=C8obXZcAAAAJ',
+    'https://www.linkedin.com/in/david-huangal/',
+    'https://davidhuangal.bearblog.dev/',
+  ],
+};
 ---
 
 <Base
   title="David Huangal"
   description="David Huangal — AI researcher and technical lead at the University of Missouri's Center for Geospatial Intelligence. Paper notes, publications, and projects on semantic segmentation and remote sensing."
 >
+  <script type="application/ld+json" set:html={JSON.stringify(personSchema)} is:inline />
   <section class="intro">
     <figure class="portrait-fig">
       <img
