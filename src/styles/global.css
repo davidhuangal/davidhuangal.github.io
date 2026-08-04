@@ -1,0 +1,371 @@
+@import './tokens.css';
+
+html {
+  overflow-x: clip;
+  background: var(--color-paper);
+  color-scheme: light dark;
+}
+
+body {
+  overflow-x: clip;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  padding-inline: max(var(--page-gutter), env(safe-area-inset-left));
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    font-weight: 350;
+  }
+}
+
+.page {
+  max-width: 44rem;
+  margin-inline: auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+  text-decoration-color: color-mix(in oklch, var(--color-accent) 45%, transparent);
+  transition: text-decoration-color var(--dur-micro) var(--ease-out);
+}
+
+a:hover {
+  text-decoration-color: var(--color-accent);
+}
+
+a:active {
+  color: var(--color-muted);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+::selection {
+  background: color-mix(in oklch, var(--color-accent) 22%, var(--color-paper));
+}
+
+hr {
+  border: 0;
+  border-top: var(--rule-hair) solid var(--color-rule);
+  margin-block: var(--space-xl);
+}
+
+code,
+pre,
+kbd {
+  font-family: var(--font-mono);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.muted {
+  color: var(--color-neutral);
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- masthead (N6) ---- */
+
+.mast {
+  display: grid;
+  gap: var(--space-2xs);
+  padding-block: var(--space-lg) 0;
+  text-align: left;
+}
+
+.mast-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  line-height: 1;
+}
+
+.mast-name a {
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.mast-name a:hover {
+  color: var(--color-accent);
+}
+
+.mast-line {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-neutral);
+}
+
+.mast-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  list-style: none;
+  padding: 0;
+  margin: var(--space-xs) 0 0;
+}
+
+.mast-nav a {
+  white-space: nowrap;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.mast-nav a:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.mast-nav a[aria-current='page'] {
+  color: var(--color-accent);
+}
+
+.mast-rule {
+  border: 0;
+  border-top: 3px double var(--color-rule);
+  border-bottom: none;
+  height: 0;
+  margin: var(--space-sm) 0 0;
+}
+
+/* ---- section heads (S2 hanging) ---- */
+
+.head-hang {
+  padding-block: var(--space-2xl) var(--space-md);
+}
+
+.head-hang h2 {
+  margin: 0;
+  font-size: var(--text-md);
+  font-weight: 700;
+}
+
+/* ---- index lists (Index-First rows) ---- */
+
+.index-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.index-list li {
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+
+.index-list li:last-child {
+  border-bottom: var(--rule-hair) solid var(--color-rule);
+}
+
+.index-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  padding-block: var(--space-sm);
+}
+
+.index-row .spacer {
+  flex: 1;
+}
+
+.index-row time,
+.index-row .index-meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-neutral);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---- typographic link CTA (C3) ---- */
+
+.link-cta {
+  font-size: var(--text-sm);
+}
+
+/* ---- footer colophon (Ft4) ---- */
+
+.foot-dense {
+  margin-top: var(--space-3xl);
+  padding-block: var(--space-lg);
+  border-top: var(--rule-hair) solid var(--color-rule);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.7;
+  color: var(--color-neutral);
+}
+
+.foot-dense p {
+  margin: 0 0 var(--space-xs);
+}
+
+.foot-dense a {
+  color: var(--color-neutral);
+  text-decoration-color: var(--color-rule);
+}
+
+.foot-dense a:hover {
+  color: var(--color-accent);
+  text-decoration-color: var(--color-accent);
+}
+
+/* ---- prose (notes) ---- */
+
+.prose {
+  max-width: var(--measure);
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  margin-block: var(--space-md);
+}
+
+.prose h2 {
+  font-size: var(--text-lg);
+  margin-block: var(--space-xl) var(--space-sm);
+}
+
+.prose h3 {
+  font-size: var(--text-md);
+  margin-block: var(--space-lg) var(--space-sm);
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-block: var(--space-lg);
+  border: var(--rule-hair) solid var(--color-rule);
+  background: var(--color-figure-bg);
+  padding: var(--space-xs);
+  box-sizing: border-box;
+}
+
+.prose blockquote {
+  margin: var(--space-lg) 0;
+  padding-inline-start: var(--space-md);
+  border-inline-start: 2px solid var(--color-rule);
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.prose pre {
+  padding: var(--space-md);
+  overflow-x: auto;
+  border: var(--rule-hair) solid var(--color-rule);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+}
+
+.prose :not(pre) > code {
+  background: var(--color-code-bg);
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
+  font-size: 0.88em;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  margin-block: var(--space-lg);
+}
+
+.prose th,
+.prose td {
+  text-align: left;
+  padding: var(--space-xs) var(--space-sm);
+  border-bottom: var(--rule-hair) solid var(--color-rule);
+}
+
+.prose th {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  color: var(--color-neutral);
+}
+
+.prose .table-scroll {
+  overflow-x: auto;
+}
+
+/* shiki dual themes follow the color scheme */
+.astro-code,
+.astro-code span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  .astro-code,
+  .astro-code span {
+    color: var(--shiki-dark);
+    background-color: var(--shiki-dark-bg);
+  }
+}
+
+/* katex display math can exceed the measure */
+.prose .katex-display {
+  overflow-x: auto;
+  overflow-y: clip;
+  padding-block: var(--space-2xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 150ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important;
+  }
+}

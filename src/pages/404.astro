@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Page not found · David Huangal" description="This page does not exist.">
+  <section class="notfound">
+    <h1>Page not found.</h1>
+    <p>This address doesn't match anything on the site.</p>
+    <p class="link-cta"><a href="/">Back to the index →</a></p>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    padding-block: var(--space-3xl);
+    max-width: var(--measure);
+  }
+
+  .notfound h1 {
+    font-size: var(--text-xl);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .notfound p {
+    margin: 0 0 var(--space-md);
+  }
+</style>

@@ -1,0 +1,77 @@
+---
+import '@fontsource-variable/newsreader';
+import '@fontsource-variable/source-serif-4';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const nav = [
+  { href: '/notes/', label: 'Paper Notes' },
+  { href: '/publications/', label: 'Publications' },
+  { href: '/projects/', label: 'Projects' },
+];
+const { pathname } = Astro.url;
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(pathname, Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="David Huangal · Paper Notes" href="/rss.xml" />
+    <meta property="og:site_name" content="David Huangal" />
+    <meta property="og:title" content={title} />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <div class="page">
+      <header class="mast">
+        <p class="mast-name"><a href="/">David Huangal</a></p>
+        <p class="mast-line">Applied AI · Remote Sensing · University of Missouri</p>
+        <nav class="mast-nav" aria-label="Primary">
+          <ul>
+            {
+              nav.map((item) => (
+                <li>
+                  <a href={item.href} aria-current={pathname.startsWith(item.href) ? 'page' : undefined}>
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+        <hr class="mast-rule" aria-hidden="true" />
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer class="foot-dense">
+        <p>
+          © {year} David Huangal. Set in Newsreader, Source Serif 4 & IBM Plex Mono. Built with Astro;
+          no scripts, no tracking. <a href="/rss.xml">RSS</a> ·
+          <a href="https://github.com/davidhuangal">GitHub</a> ·
+          <a href="https://www.linkedin.com/in/david-huangal-b447a314b/">LinkedIn</a>
+        </p>
+        <p>
+          The views and opinions expressed on this website are solely those of the author and do not
+          necessarily reflect the official policy, position, or opinions of any other individual,
+          organization, employer, or company the author may be affiliated with.
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

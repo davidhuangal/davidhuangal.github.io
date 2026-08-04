@@ -1,0 +1,72 @@
+/* Hallmark · genre: editorial · macrostructure: Index-First · theme: Newsprint · enrichment: none · nav: N6 · footer: Ft4
+ * N6 knobs: issue line=below wordmark, wordmark size=2xl, rule=double
+ * Ft4 knobs: family=monospace, layout=single block, includes=date+attribution
+ * tone: editorial · anchor hue: warm 85 / accent oxblood 25
+ * Hallmark · pre-emit critique: P4 H4 E4 S4 R5 V4 */
+
+:root {
+  /* paper + ink — warm anchor (hue 85), oxblood accent (hue 25) */
+  --color-paper: oklch(97% 0.008 85);
+  --color-paper-2: oklch(94% 0.01 85);
+  --color-rule: oklch(85% 0.012 85);
+  --color-neutral: oklch(48% 0.012 70);
+  --color-muted: oklch(38% 0.012 70);
+  --color-ink: oklch(21% 0.014 60);
+  --color-accent: oklch(45% 0.14 25);
+  --color-focus: oklch(50% 0.15 25);
+  --color-code-bg: oklch(93.5% 0.009 85);
+  /* figure plate stays light in both schemes — paper figures are drawn on white */
+  --color-figure-bg: oklch(98% 0.005 85);
+
+  /* type */
+  --font-display: 'Newsreader Variable', ui-serif, Georgia, serif;
+  --font-body: 'Source Serif 4 Variable', ui-serif, Georgia, serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* scale — major third (1.25) */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-md: 1.25rem;
+  --text-lg: 1.5625rem;
+  --text-xl: 1.9531rem;
+  --text-2xl: 2.4414rem;
+  --text-3xl: 3.0518rem;
+  --text-display: clamp(2.4rem, 4vw + 1rem, 3.75rem);
+
+  /* space — 4pt */
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  /* rules + motion */
+  --rule-hair: 1px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+
+  --page-gutter: clamp(1rem, 4vw, 2rem);
+  --measure: 65ch;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-paper: oklch(15% 0.01 60);
+    --color-paper-2: oklch(18% 0.011 60);
+    --color-rule: oklch(31% 0.012 60);
+    --color-neutral: oklch(67% 0.01 70);
+    --color-muted: oklch(76% 0.008 75);
+    --color-ink: oklch(93% 0.008 85);
+    --color-accent: oklch(70% 0.11 28);
+    --color-focus: oklch(72% 0.12 28);
+    --color-code-bg: oklch(19.5% 0.011 60);
+  }
+}

@@ -1,0 +1,83 @@
+---
+import { getCollection, render } from 'astro:content';
+import 'katex/dist/katex.min.css';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+  return notes.map((note) => ({ params: { slug: note.id }, props: { note } }));
+}
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+
+const topicLabel = {
+  'semantic-segmentation': 'Semantic Segmentation',
+  'object-detection': 'Object Detection',
+}[note.data.topic];
+const dateFmt = new Intl.DateTimeFormat('en-US', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<Base
+  title={`${note.data.title} · Paper Notes · David Huangal`}
+  description={`Reading notes on ${note.data.paperTitle} (${note.data.paperYear}).`}
+>
+  <article>
+    <header class="note-head">
+      <h1>{note.data.title}</h1>
+      <p class="paper-title">
+        {note.data.paperTitle}
+        {note.data.paperAuthors && <span class="authors"> — {note.data.paperAuthors}</span>}
+      </p>
+      <p class="note-meta mono">
+        Paper {note.data.paperYear} · {topicLabel} · Notes,{' '}
+        <time datetime={note.data.date.toISOString()}>{dateFmt.format(note.data.date)}</time>
+      </p>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+    <p class="link-cta back"><a href="/notes/">← All paper notes</a></p>
+  </article>
+</Base>
+
+<style>
+  .note-head {
+    padding-block: var(--space-xl) var(--space-lg);
+    border-bottom: var(--rule-hair) solid var(--color-rule);
+    max-width: var(--measure);
+  }
+
+  .note-head h1 {
+    margin: 0 0 var(--space-xs);
+    font-size: var(--text-2xl);
+  }
+
+  .paper-title {
+    margin: 0 0 var(--space-sm);
+    font-size: var(--text-md);
+    line-height: 1.4;
+    color: var(--color-muted);
+  }
+
+  .authors {
+    color: var(--color-neutral);
+    font-size: var(--text-base);
+  }
+
+  .note-meta {
+    margin: 0;
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-neutral);
+  }
+
+  .back {
+    margin-block: var(--space-2xl) 0;
+  }
+</style>

@@ -1,0 +1,112 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { publications } from '../data/publications';
+import { projects } from '../data/projects';
+
+const notes = (await getCollection('notes')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const recentNotes = notes.slice(0, 5);
+const firstAuthor = publications.filter((p) => p.firstAuthor);
+const dateFmt = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' });
+---
+
+<Base
+  title="David Huangal"
+  description="David Huangal — applied AI researcher at the University of Missouri. Paper notes, publications, and projects on semantic segmentation and remote sensing."
+>
+  <section class="intro">
+    <p>
+      I am a researcher at the University of Missouri, Columbia working on applied AI. I'm
+      particularly interested in developing methods that are both accurate and computationally
+      efficient, enabling them to scale to the large volumes of data common to modern applications.
+    </p>
+  </section>
+
+  <section aria-labelledby="h-notes">
+    <header class="head-hang">
+      <h2 id="h-notes">Paper Notes</h2>
+    </header>
+    <ul class="index-list">
+      {
+        recentNotes.map((note) => (
+          <li>
+            <a class="index-row row-link" href={`/notes/${note.id}/`}>
+              <span class="row-title">{note.data.title}</span>
+              <span class="index-meta">{note.data.paperYear}</span>
+              <span class="spacer" />
+              <time datetime={note.data.date.toISOString()}>{dateFmt.format(note.data.date)}</time>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="link-cta"><a href="/notes/">All {notes.length} notes, by topic →</a></p>
+  </section>
+
+  <section aria-labelledby="h-pubs">
+    <header class="head-hang">
+      <h2 id="h-pubs">First-Author Publications</h2>
+    </header>
+    <ul class="index-list">
+      {
+        firstAuthor.map((pub) => (
+          <li>
+            <a class="index-row row-link" href={pub.url}>
+              <span class="row-title">{pub.title}</span>
+              <span class="spacer" />
+              <span class="index-meta tnum">{pub.year}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="link-cta"><a href="/publications/">All {publications.length} publications →</a></p>
+  </section>
+
+  <section aria-labelledby="h-projects">
+    <header class="head-hang">
+      <h2 id="h-projects">Projects</h2>
+    </header>
+    <ul class="index-list">
+      {
+        projects.map((project) => (
+          <li>
+            <a class="index-row row-link" href={project.url}>
+              <span class="row-title">{project.name}</span>
+              <span class="spacer" />
+              <span class="index-meta">{project.meta}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .intro {
+    padding-top: var(--space-xl);
+    max-width: var(--measure);
+  }
+
+  .intro p {
+    margin: 0;
+    font-size: var(--text-md);
+    line-height: 1.55;
+  }
+
+  .row-link {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  .row-link .row-title {
+    transition: color var(--dur-micro) var(--ease-out);
+  }
+
+  .row-link:hover .row-title {
+    color: var(--color-accent);
+  }
+</style>
