@@ -36,7 +36,6 @@ export const publications: Publication[] = [
     year: 2020,
     url: 'https://www.spiedigitallibrary.org/conference-proceedings-of-spie/11413/2557610/Evaluating-deep-road-segmentation-techniques-for-low-altitude-UAS-imagery/10.1117/12.2557610.full',
     firstAuthor: true,
-    selected: true,
   },
   {
     title: 'Semantic Segmentation of Burned Areas in Sentinel-2 Satellite Imagery Using Deep Learning Transformer and Convolutional Attention Networks',
