@@ -15,7 +15,7 @@ const selected = publications.filter((p) => p.selected).sort((a, b) => b.year - 
 
 <Base
   title="David Huangal"
-  description="David Huangal — applied AI researcher at the University of Missouri. Paper notes, publications, and projects on semantic segmentation and remote sensing."
+  description="David Huangal — AI researcher and technical lead at the University of Missouri's Center for Geospatial Intelligence. Paper notes, publications, and projects on semantic segmentation and remote sensing."
 >
   <section class="intro">
     <figure class="portrait-fig">
@@ -34,10 +34,21 @@ const selected = publications.filter((p) => p.selected).sort((a, b) => b.year - 
       <h1>David Huangal</h1>
       <p class="tagline muted">Applied AI · Remote Sensing · University of Missouri</p>
       <p>
-        I am a researcher at the University of Missouri, Columbia working on applied AI. I'm
-        particularly interested in developing methods that are both accurate and computationally
-        efficient, enabling them to scale to the large volumes of data common to modern
-        applications.
+        I'm an AI researcher and technical lead at the University of Missouri's Center for
+        Geospatial Intelligence. My work focuses on computer vision and building accurate,
+        efficient AI systems that operate at scale. Much of my research has involved semantic
+        segmentation and object detection in satellite and aerial imagery, and my broader
+        interests include vision-language models, model evaluation, and machine learning
+        deployment.
+      </p>
+      <p>
+        I earned both my bachelor's degree and Ph.D. in Computer Science from the University of
+        Missouri - Columbia.
+      </p>
+      <p>
+        You can find me on GitHub at <a href="https://github.com/davidhuangal">davidhuangal</a> or
+        connect with me on
+        <a href="https://www.linkedin.com/in/david-huangal-b447a314b/">LinkedIn</a>.
       </p>
     </div>
   </section>
@@ -148,7 +159,11 @@ const selected = publications.filter((p) => p.selected).sort((a, b) => b.year - 
   }
 
   .intro-text p:not(.tagline) {
-    margin: 0;
+    margin: 0 0 var(--space-md);
+  }
+
+  .intro-text p:last-child {
+    margin-bottom: 0;
   }
 
   .meta {
