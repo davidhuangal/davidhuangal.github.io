@@ -7,21 +7,15 @@ import { projects } from '../data/projects';
   title="Projects · David Huangal"
   description="Open-source projects by David Huangal: vision-language model evaluation for remote sensing and segmentation model ports for MMSegmentation."
 >
-  <section aria-labelledby="h-projects">
-    <header class="head-hang">
-      <h2 id="h-projects">Projects</h2>
-    </header>
-    <ul class="index-list">
+  <section class="intro" aria-labelledby="h-projects">
+    <h1 id="h-projects">Projects</h1>
+    <ul class="doc-list">
       {
         projects.map((project) => (
           <li>
-            <div class="project">
-              <p class="project-name">
-                <a href={project.url}>{project.name}</a>
-                <span class="index-meta mono">{project.meta}</span>
-              </p>
-              <p class="project-desc">{project.description}</p>
-            </div>
+            <a href={project.url}>{project.name}</a>
+            <span class="meta muted"> · {project.meta}</span>
+            <span class="sub-line">{project.description}</span>
           </li>
         ))
       }
@@ -30,42 +24,17 @@ import { projects } from '../data/projects';
 </Base>
 
 <style>
-  .project {
-    padding-block: var(--space-md);
+  /* Hallmark · design-system: design.md · designed-as-app */
+  .intro {
+    padding-top: var(--space-xl);
     max-width: var(--measure);
   }
 
-  .project p {
-    margin: 0;
+  .intro h1 {
+    margin-bottom: var(--space-md);
   }
 
-  .project-name {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-md);
-    margin-bottom: var(--space-2xs);
-  }
-
-  .project-name a {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: var(--text-md);
-    color: var(--color-ink);
-    text-decoration: none;
-  }
-
-  .project-name a:hover {
-    color: var(--color-accent);
-  }
-
-  .project-name .index-meta {
-    font-size: var(--text-xs);
-    color: var(--color-neutral);
-  }
-
-  .project-desc {
+  .meta {
     font-size: var(--text-sm);
-    color: var(--color-muted);
-    line-height: 1.55;
   }
 </style>

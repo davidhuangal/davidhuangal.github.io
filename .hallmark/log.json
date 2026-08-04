@@ -1,6 +1,17 @@
 [
   {
     "date": "2026-08-03",
+    "scope": "app",
+    "macrostructure": "Long Document",
+    "theme": "studied-DNA (https://jxmo.io/)",
+    "theme_axes": "light / system-grotesk-weight-led / chromatic-moss",
+    "enrichment": "none",
+    "nav": "bare-text-row",
+    "footer": "minimal end-matter (design.md variant)",
+    "brief": "site-wide redesign to locked design.md · jxmo.io DNA · moss accent replaces source red"
+  },
+  {
+    "date": "2026-08-03",
     "macrostructure": "Index-First",
     "theme": "Newsprint",
     "enrichment": "none",

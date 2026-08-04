@@ -34,6 +34,7 @@ const groups = [
   description="Notes taken while reading research papers on semantic segmentation and object detection — a personal archive, not formal reviews."
 >
   <section class="intro">
+    <h1>Paper Notes</h1>
     <p>
       Notes I've taken while reading academic papers of interest. These are not formal reviews, but a
       practical way for me to revisit the ideas and methods in the papers from my perspective.
@@ -43,22 +44,15 @@ const groups = [
   {
     groups.map((group) => (
       <section aria-labelledby={`h-${group.heading}-${group.sub}`.replace(/\s+/g, '-').toLowerCase()}>
-        <header class="head-hang group-head">
-          <h2 id={`h-${group.heading}-${group.sub}`.replace(/\s+/g, '-').toLowerCase()}>
-            {group.heading} <span class="mono group-sub">{group.sub}</span>
-          </h2>
-        </header>
-        <ul class="index-list">
+        <h2 id={`h-${group.heading}-${group.sub}`.replace(/\s+/g, '-').toLowerCase()}>
+          {group.heading} <span class="group-sub muted">({group.sub})</span>
+        </h2>
+        <ul class="doc-list">
           {group.notes.map((note) => (
             <li>
-              <a class="index-row row-link" href={`/notes/${note.id}/`}>
-                <span class="note-title-block">
-                  <span class="row-title">{note.data.title}</span>
-                  <span class="paper-title">{note.data.paperTitle}</span>
-                </span>
-                <span class="spacer" />
-                <span class="index-meta tnum">{note.data.paperYear}</span>
-              </a>
+              <span class="tnum">[{note.data.paperYear}]</span>{' '}
+              <a href={`/notes/${note.id}/`}>{note.data.title}</a>
+              <span class="sub-line">{note.data.paperTitle}</span>
             </li>
           ))}
         </ul>
@@ -68,6 +62,7 @@ const groups = [
 </Base>
 
 <style>
+  /* Hallmark · design-system: design.md · designed-as-app */
   .intro {
     padding-top: var(--space-xl);
     max-width: var(--measure);
@@ -77,47 +72,8 @@ const groups = [
     margin: 0;
   }
 
-  .group-head {
-    padding-block: var(--space-2xl) var(--space-sm);
-  }
-
-  .group-head h2 {
-    margin: 0;
-  }
-
   .group-sub {
-    font-size: var(--text-xs);
+    font-size: var(--text-base);
     font-weight: 400;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--color-neutral);
-    margin-inline-start: var(--space-2xs);
-  }
-
-  .row-link {
-    color: var(--color-ink);
-    text-decoration: none;
-    align-items: first baseline;
-  }
-
-  .note-title-block {
-    display: grid;
-    gap: var(--space-3xs);
-    min-width: 0;
-  }
-
-  .row-title {
-    font-weight: 600;
-    transition: color var(--dur-micro) var(--ease-out);
-  }
-
-  .row-link:hover .row-title {
-    color: var(--color-accent);
-  }
-
-  .paper-title {
-    font-size: var(--text-sm);
-    color: var(--color-neutral);
-    line-height: 1.4;
   }
 </style>

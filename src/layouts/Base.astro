@@ -1,8 +1,4 @@
 ---
-import '@fontsource-variable/newsreader';
-import '@fontsource-variable/source-serif-4';
-import '@fontsource/ibm-plex-mono/400.css';
-import '@fontsource/ibm-plex-mono/500.css';
 import '../styles/global.css';
 
 interface Props {
@@ -12,11 +8,14 @@ interface Props {
 
 const { title, description } = Astro.props;
 const nav = [
+  { href: '/', label: 'Home' },
   { href: '/notes/', label: 'Paper Notes' },
   { href: '/publications/', label: 'Publications' },
   { href: '/projects/', label: 'Projects' },
 ];
 const { pathname } = Astro.url;
+const isCurrent = (href: string) =>
+  href === '/' ? pathname === '/' : pathname.startsWith(href);
 const year = new Date().getFullYear();
 ---
 
@@ -38,31 +37,26 @@ const year = new Date().getFullYear();
   </head>
   <body>
     <div class="page">
-      <header class="mast">
-        <p class="mast-name"><a href="/">David Huangal</a></p>
-        <p class="mast-line">Applied AI · Remote Sensing · University of Missouri</p>
-        <nav class="mast-nav" aria-label="Primary">
-          <ul>
-            {
-              nav.map((item) => (
-                <li>
-                  <a href={item.href} aria-current={pathname.startsWith(item.href) ? 'page' : undefined}>
-                    {item.label}
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-        </nav>
-        <hr class="mast-rule" aria-hidden="true" />
-      </header>
+      <nav class="site-nav" aria-label="Primary">
+        <ul>
+          {
+            nav.map((item) => (
+              <li>
+                <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
       <main>
         <slot />
       </main>
-      <footer class="foot-dense">
+      <footer class="foot-min">
         <p>
-          © {year} David Huangal. Set in Newsreader, Source Serif 4 & IBM Plex Mono. Built with Astro;
-          no scripts, no tracking. <a href="/rss.xml">RSS</a> ·
+          © {year} David Huangal. Built with Astro; no scripts, no tracking.
+          <a href="/rss.xml">RSS</a> ·
           <a href="https://github.com/davidhuangal">GitHub</a> ·
           <a href="https://www.linkedin.com/in/david-huangal-b447a314b/">LinkedIn</a>
         </p>

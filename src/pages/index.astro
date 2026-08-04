@@ -7,9 +7,10 @@ import { projects } from '../data/projects';
 const notes = (await getCollection('notes')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
-const recentNotes = notes.slice(0, 5);
+const recentNotes = notes
+  .slice(0, 5)
+  .sort((a, b) => b.data.paperYear - a.data.paperYear);
 const firstAuthor = publications.filter((p) => p.firstAuthor);
-const dateFmt = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' });
 ---
 
 <Base
@@ -17,27 +18,40 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeri
   description="David Huangal — applied AI researcher at the University of Missouri. Paper notes, publications, and projects on semantic segmentation and remote sensing."
 >
   <section class="intro">
-    <p>
-      I am a researcher at the University of Missouri, Columbia working on applied AI. I'm
-      particularly interested in developing methods that are both accurate and computationally
-      efficient, enabling them to scale to the large volumes of data common to modern applications.
-    </p>
+    <figure class="portrait-fig">
+      <img
+        class="portrait"
+        src="/images/david.jpg"
+        alt="David Huangal smiling in a garden"
+        width="522"
+        height="760"
+        loading="eager"
+        decoding="async"
+      />
+      <figcaption class="muted">Kodak Ultramax 400</figcaption>
+    </figure>
+    <div class="intro-text">
+      <h1>David Huangal</h1>
+      <p class="tagline muted">Applied AI · Remote Sensing · University of Missouri</p>
+      <p>
+        I am a researcher at the University of Missouri, Columbia working on applied AI. I'm
+        particularly interested in developing methods that are both accurate and computationally
+        efficient, enabling them to scale to the large volumes of data common to modern
+        applications.
+      </p>
+    </div>
   </section>
 
+  <hr />
+
   <section aria-labelledby="h-notes">
-    <header class="head-hang">
-      <h2 id="h-notes">Paper Notes</h2>
-    </header>
-    <ul class="index-list">
+    <h2 id="h-notes">Paper Notes</h2>
+    <ul class="doc-list">
       {
         recentNotes.map((note) => (
           <li>
-            <a class="index-row row-link" href={`/notes/${note.id}/`}>
-              <span class="row-title">{note.data.title}</span>
-              <span class="index-meta">{note.data.paperYear}</span>
-              <span class="spacer" />
-              <time datetime={note.data.date.toISOString()}>{dateFmt.format(note.data.date)}</time>
-            </a>
+            <span class="tnum">[{note.data.paperYear}]</span>{' '}
+            <a href={`/notes/${note.id}/`}>{note.data.title}</a>
           </li>
         ))
       }
@@ -45,19 +59,15 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeri
     <p class="link-cta"><a href="/notes/">All {notes.length} notes, by topic →</a></p>
   </section>
 
+  <hr />
+
   <section aria-labelledby="h-pubs">
-    <header class="head-hang">
-      <h2 id="h-pubs">First-Author Publications</h2>
-    </header>
-    <ul class="index-list">
+    <h2 id="h-pubs">First-Author Publications</h2>
+    <ul class="doc-list">
       {
         firstAuthor.map((pub) => (
           <li>
-            <a class="index-row row-link" href={pub.url}>
-              <span class="row-title">{pub.title}</span>
-              <span class="spacer" />
-              <span class="index-meta tnum">{pub.year}</span>
-            </a>
+            <span class="tnum">[{pub.year}]</span> <a href={pub.url}>{pub.title}</a>
           </li>
         ))
       }
@@ -65,19 +75,16 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeri
     <p class="link-cta"><a href="/publications/">All {publications.length} publications →</a></p>
   </section>
 
+  <hr />
+
   <section aria-labelledby="h-projects">
-    <header class="head-hang">
-      <h2 id="h-projects">Projects</h2>
-    </header>
-    <ul class="index-list">
+    <h2 id="h-projects">Projects</h2>
+    <ul class="doc-list">
       {
         projects.map((project) => (
           <li>
-            <a class="index-row row-link" href={project.url}>
-              <span class="row-title">{project.name}</span>
-              <span class="spacer" />
-              <span class="index-meta">{project.meta}</span>
-            </a>
+            <a href={project.url}>{project.name}</a>
+            <span class="sub-line">{project.meta}</span>
           </li>
         ))
       }
@@ -86,27 +93,67 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeri
 </Base>
 
 <style>
+  /* Hallmark · design-system: design.md · designed-as-app */
+  /* split diptych: bio left, portrait right; stacks with the photo on top on mobile */
   .intro {
     padding-top: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+  }
+
+  .portrait-fig {
+    margin: 0;
+    flex-shrink: 0;
+    display: grid;
+    gap: var(--space-2xs);
+    justify-items: center;
+  }
+
+  .portrait {
+    width: 12rem;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-card);
+  }
+
+  .portrait-fig figcaption {
+    font-size: var(--text-xs);
+  }
+
+  .intro-text {
+    flex: 1;
+    min-width: 0;
     max-width: var(--measure);
   }
 
-  .intro p {
+  .intro h1 {
+    margin-bottom: var(--space-2xs);
+  }
+
+  .tagline {
+    margin: 0 0 var(--space-md);
+    font-size: var(--text-sm);
+  }
+
+  .intro-text p:not(.tagline) {
     margin: 0;
-    font-size: var(--text-md);
-    line-height: 1.55;
   }
 
-  .row-link {
-    color: var(--color-ink);
-    text-decoration: none;
-  }
+  @media (min-width: 640px) {
+    .intro {
+      flex-direction: row-reverse;
+      align-items: flex-start;
+      gap: var(--space-xl);
+    }
 
-  .row-link .row-title {
-    transition: color var(--dur-micro) var(--ease-out);
-  }
+    .portrait-fig {
+      margin-top: var(--space-sm);
+    }
 
-  .row-link:hover .row-title {
-    color: var(--color-accent);
+    .portrait {
+      width: 13rem;
+    }
   }
 </style>
