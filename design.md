@@ -68,6 +68,9 @@ For Tailwind v4 `@theme`, DTCG `tokens.json`, or shadcn/ui CSS variables, ask "e
 - Inline links keep persistent underlines (see Notes below); bare-text nav links are the exception.
 - Film-thread details (the one permitted artsy layer): portrait is film photography with a small
   muted figcaption naming the stock; `.doc-list` bullet markers take the moss accent.
+  Extends to `/photos/` (amended 2026-08-04): frames in a two-column CSS-columns masonry
+  (single column under 640px), `--radius-card` corners, muted figcaptions in the
+  portrait-caption voice (stock · place · year). No lightbox or hover effects, and no JS.
   Cap: no textures, reveals, decorative dividers, or further flourishes on top of this.
 
 ## Notes (do NOT carry over from source)

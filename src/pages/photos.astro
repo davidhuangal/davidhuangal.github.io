@@ -1,0 +1,63 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { photos } from '../data/photos';
+---
+
+<Base
+  title="Photos · David Huangal"
+  description="Film and digital photography by David Huangal."
+>
+  <section class="intro">
+    <h1>Photos</h1>
+  </section>
+  <section aria-label="Photographs" class="photo-list">
+    {
+      photos.map((photo) => (
+        <figure>
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            widths={[640, 960, 1400]}
+            sizes="(max-width: 46rem) 100vw, 44rem"
+            loading="lazy"
+          />
+          {photo.caption && <figcaption class="muted">{photo.caption}</figcaption>}
+        </figure>
+      ))
+    }
+  </section>
+</Base>
+
+<style>
+  /* Hallmark · design-system: design.md · designed-as-app */
+  /* masonry via CSS columns (no JS): one column on mobile, two from 640px;
+     captions in the portrait-figcaption voice */
+  .photo-list {
+    padding-block: var(--space-xl) var(--space-2xl);
+  }
+
+  .photo-list figure {
+    margin: 0 0 var(--space-lg);
+    break-inside: avoid;
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  @media (min-width: 640px) {
+    .photo-list {
+      columns: 2;
+      column-gap: var(--space-lg);
+    }
+  }
+
+  .photo-list img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-card);
+  }
+
+  .photo-list figcaption {
+    font-size: var(--text-xs);
+  }
+</style>
