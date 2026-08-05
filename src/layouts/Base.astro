@@ -36,6 +36,12 @@ const year = new Date().getFullYear();
     <meta property="og:type" content="website" />
     <meta property="og:description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    <script is:inline>
+      const theme = localStorage.getItem('theme');
+      if (theme === 'light' || theme === 'dark') {
+        document.documentElement.dataset.theme = theme;
+      }
+    </script>
   </head>
   <body>
     <div class="page">
@@ -51,13 +57,78 @@ const year = new Date().getFullYear();
             ))
           }
         </ul>
+        <button class="theme-toggle" type="button" aria-label="Theme: follow system">
+          <svg
+            class="icon-system"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="4" width="18" height="12" rx="2"></rect>
+            <path d="M2 20h20"></path>
+          </svg>
+          <svg
+            class="icon-light"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="4"></circle>
+            <path
+              d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32 1.41-1.41"
+            ></path>
+          </svg>
+          <svg
+            class="icon-dark"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+          </svg>
+        </button>
       </nav>
+      <script>
+        const root = document.documentElement;
+        const button = document.querySelector<HTMLButtonElement>('.theme-toggle')!;
+        const labels: Record<string, string> = {
+          system: 'Theme: follow system',
+          light: 'Theme: light',
+          dark: 'Theme: dark',
+        };
+        const cycle = ['system', 'light', 'dark'];
+        button.addEventListener('click', () => {
+          const current = root.dataset.theme ?? 'system';
+          const next = cycle[(cycle.indexOf(current) + 1) % cycle.length];
+          if (next === 'system') {
+            delete root.dataset.theme;
+            localStorage.removeItem('theme');
+          } else {
+            root.dataset.theme = next;
+            localStorage.setItem('theme', next);
+          }
+          button.setAttribute('aria-label', labels[next]);
+        });
+        button.setAttribute('aria-label', labels[root.dataset.theme ?? 'system']);
+      </script>
       <main>
         <slot />
       </main>
       <footer class="foot-min">
         <p>
-          © {year} David Huangal. Built with Astro; no scripts, no tracking.
+          © {year} David Huangal. Built with Astro; no tracking.
           <a href="/rss.xml">RSS</a> ·
           <a href="https://github.com/davidhuangal">GitHub</a> ·
           <a href="https://scholar.google.com/citations?user=C8obXZcAAAAJ&hl=en">Google Scholar</a> ·

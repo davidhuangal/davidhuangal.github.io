@@ -62,9 +62,23 @@
   --measure: 65ch;
 }
 
-/* design.md variant: dark scheme derived from the system — neutral near-black paper, moss lifted for contrast */
+:root {
+  color-scheme: light dark;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* design.md variant: dark scheme derived from the system - neutral near-black paper, moss lifted for contrast.
+ * Applied two ways: OS preference (unless the user forced light) and the explicit dark toggle.
+ * Keep both blocks identical. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --color-paper: oklch(16% 0 0);
     --color-paper-2: oklch(20% 0 0);
     --color-rule: oklch(32% 0 0);
@@ -75,4 +89,16 @@
     --color-focus: oklch(78% 0.1 145);
     --color-code-bg: oklch(20% 0 0);
   }
+}
+
+:root[data-theme='dark'] {
+  --color-paper: oklch(16% 0 0);
+  --color-paper-2: oklch(20% 0 0);
+  --color-rule: oklch(32% 0 0);
+  --color-neutral: oklch(66% 0 0);
+  --color-muted: oklch(75% 0 0);
+  --color-ink: oklch(93% 0 0);
+  --color-accent: oklch(75% 0.09 145);
+  --color-focus: oklch(78% 0.1 145);
+  --color-code-bg: oklch(20% 0 0);
 }
