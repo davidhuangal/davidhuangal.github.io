@@ -1,5 +1,6 @@
 ---
 title: "Segmenter"
+description: "Notes on Segmenter, a pure-transformer segmentation model that combines a ViT encoder with a DETR-inspired mask transformer decoder producing patch-level logits."
 paperTitle: "Segmenter: Transformer for Semantic Segmentation"
 paperYear: 2021
 topic: semantic-segmentation

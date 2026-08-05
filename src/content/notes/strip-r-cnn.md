@@ -1,5 +1,6 @@
 ---
 title: "Strip R-CNN"
+description: "Notes on Strip R-CNN, which uses large strip convolutions in its backbone and detection head to detect high-aspect-ratio objects in remote sensing imagery, setting a new state of the art on DOTA-v1.0."
 paperTitle: "Strip R-CNN: Large Strip Convolution for Remote Sensing Object Detection"
 paperAuthors: "Xinbin Yuan, Zhaohui Zheng, Yuxuan Li, Xialei Liu, Li Liu, Xiang Li, Qibin Hou, Ming-Ming Cheng"
 paperYear: 2025

@@ -1,5 +1,6 @@
 ---
 title: "EfficientViT"
+description: "Notes on EfficientViT, which replaces quadratic softmax self-attention with multi-scale linear attention, keeping a global receptive field while cutting segmentation latency by up to 13.9x versus SegFormer."
 paperTitle: "EfficientViT: Multi-Scale Linear Attention for High-Resolution Dense Prediction"
 paperYear: 2023
 topic: semantic-segmentation

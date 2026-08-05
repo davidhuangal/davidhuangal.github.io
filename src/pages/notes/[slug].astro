@@ -24,7 +24,7 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
 
 <Base
   title={`${note.data.title} · Paper Notes · David Huangal`}
-  description={`Reading notes on ${note.data.paperTitle} (${note.data.paperYear}).`}
+  description={note.data.description}
 >
   <article>
     <header class="note-head">

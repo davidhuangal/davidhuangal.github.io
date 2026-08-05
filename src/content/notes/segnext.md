@@ -1,5 +1,6 @@
 ---
 title: "SegNeXt"
+description: "Notes on SegNeXt, which swaps transformer self-attention for a linear-complexity convolutional attention that still captures global context, matching or beating transformer segmentation models."
 paperTitle: "SegNeXt: Rethinking Convolutional Attention Design for Semantic Segmentation"
 paperAuthors: "Meng-Hao Guo, Cheng-Ze Lu, Qibin Hou, Zhengning Liu, Ming-Ming Cheng, Shi-min Hu"
 paperYear: 2022
