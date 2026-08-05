@@ -1,5 +1,6 @@
 ---
 title: "MaskFormer"
+description: "Notes on MaskFormer, which reframes semantic segmentation as mask classification, unifying semantic and panoptic segmentation in a single architecture."
 paperTitle: "Per-Pixel Classification is Not All You Need for Semantic Segmentation"
 paperYear: 2021
 topic: semantic-segmentation

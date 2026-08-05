@@ -1,5 +1,6 @@
 ---
 title: "SegFormer"
+description: "Notes on SegFormer, which pairs a hierarchical transformer encoder without positional encodings with an all-MLP decoder, reaching strong segmentation accuracy with fewer parameters and FLOPs."
 paperTitle: "SegFormer: Simple and Efficient Design for Semantic Segmentation with Transformers"
 paperYear: 2021
 topic: semantic-segmentation

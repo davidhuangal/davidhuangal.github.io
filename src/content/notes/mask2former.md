@@ -1,5 +1,6 @@
 ---
 title: "Mask2Former"
+description: "Notes on Mask2Former, which refines MaskFormer with masked attention and training changes that close the gap with specialized instance segmentation models and cut training time."
 paperTitle: "Masked-attention Mask Transformer for Universal Image Segmentation"
 paperYear: 2022
 topic: semantic-segmentation

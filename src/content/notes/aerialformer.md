@@ -1,5 +1,6 @@
 ---
 title: "AerialFormer"
+description: "Notes on AerialFormer, which pairs a transformer encoder with a CNN stem and multi-dilated CNN decoder to handle tiny, densely packed objects in aerial imagery segmentation."
 paperTitle: "AerialFormer: Multi-resolution Transformer for Aerial Image Segmentation"
 paperYear: 2024
 topic: semantic-segmentation

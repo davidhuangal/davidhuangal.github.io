@@ -1,5 +1,6 @@
 ---
 title: "SETR"
+description: "Notes on SETR, which reformulates semantic segmentation as sequence-to-sequence prediction with a pure transformer encoder that never downsamples, topping ADE20K at publication."
 paperTitle: "Rethinking Semantic Segmentation from a Sequence-to-Sequence Perspective with Transformers"
 paperYear: 2021
 topic: semantic-segmentation
