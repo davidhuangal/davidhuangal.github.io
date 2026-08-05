@@ -114,6 +114,13 @@ kbd {
 
 /* ---- nav: bare text row, no wordmark ---- */
 
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding-block: var(--space-lg) 0;
+}
+
 .site-nav ul {
   display: flex;
   flex-wrap: wrap;
@@ -121,7 +128,6 @@ kbd {
   list-style: none;
   padding: 0;
   margin: 0;
-  padding-block: var(--space-lg) 0;
 }
 
 .site-nav a {
@@ -140,6 +146,32 @@ kbd {
 
 .site-nav a[aria-current='page'] {
   color: var(--color-accent);
+}
+
+/* theme toggle: bare icon button at the end of the nav row, one icon per mode */
+.theme-toggle {
+  margin-inline-start: auto;
+  display: grid;
+  place-items: center;
+  padding: var(--space-2xs);
+  border: none;
+  background: none;
+  color: var(--color-neutral);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  color: var(--color-accent);
+}
+
+.theme-toggle svg {
+  display: none;
+}
+
+:root:not([data-theme]) .theme-toggle .icon-system,
+:root[data-theme='light'] .theme-toggle .icon-light,
+:root[data-theme='dark'] .theme-toggle .icon-dark {
+  display: block;
 }
 
 /* ---- document lists: plain bullets, [year] prefixes live in markup ---- */
