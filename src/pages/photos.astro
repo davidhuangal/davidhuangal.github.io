@@ -1,7 +1,37 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import { photos } from '../data/photos';
+import { photos, type Photo } from '../data/photos';
+import { byMonth } from '../data/colorSort';
+
+/* 'date' = newest first; 'month' = newest month first, color-grouped within each month */
+const ORDER: 'date' | 'month' = 'month';
+const list = ORDER === 'month' ? await byMonth(photos) : photos;
+
+/* full-size webp per photo for the lightbox; i is the viewing order */
+type Item = { photo: Photo; i: number; full: string };
+const items: Item[] = await Promise.all(
+  list.map(async (photo, i) => ({
+    photo,
+    i,
+    full: (await getImage({ src: photo.src, format: 'webp' })).src,
+  })),
+);
+
+/* Greedy shortest-column split, so order reads left to right at every column count. */
+const split = (n: number) => {
+  const cols = Array.from({ length: n }, () => ({ h: 0, items: [] as Item[] }));
+
+  for (const item of items) {
+    const col = cols.reduce((a, b) => (b.h < a.h ? b : a));
+    col.items.push(item);
+    col.h += item.photo.src.height / item.photo.src.width;
+  }
+
+  return cols.map((col) => col.items);
+};
+
+const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
 ---
 
 <Base
@@ -11,53 +41,278 @@ import { photos } from '../data/photos';
   <section class="intro">
     <h1>Photos</h1>
   </section>
-  <section aria-label="Photographs" class="photo-list">
+  <section aria-label="Photographs" class="photo-wall">
     {
-      photos.map((photo) => (
-        <figure>
-          <Image
-            src={photo.src}
-            alt={photo.alt}
-            widths={[640, 960, 1400]}
-            sizes="(max-width: 46rem) 100vw, 44rem"
-            loading="lazy"
-          />
-          {photo.caption && <figcaption class="muted">{photo.caption}</figcaption>}
-        </figure>
+      layouts.map(({ n, cols }) => (
+        <div class={`grid cols-${n}`}>
+          {cols.map((col) => (
+            <div class="col">
+              {col.map(({ photo, i, full }) => (
+                <figure>
+                  <a class="open" href={full} data-i={i}>
+                    <Image
+                      src={photo.src}
+                      alt={photo.alt}
+                      widths={[640, 960, 1400, 1920]}
+                      sizes="(min-width: 1100px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      loading="lazy"
+                    />
+                  </a>
+                  {photo.caption && <figcaption class="muted">{photo.caption}</figcaption>}
+                </figure>
+              ))}
+            </div>
+          ))}
+        </div>
       ))
     }
   </section>
+
+  <dialog class="lightbox" aria-label="Photo viewer">
+    <img alt="" />
+  </dialog>
+
+  <!-- inline so it runs before lazy images arrive; without JS, photos show unfaded -->
+  <script is:inline>
+    document.querySelectorAll('.photo-wall img').forEach((img) => {
+      if (img.complete) return;
+
+      img.classList.add('pending');
+      const show = () => img.classList.remove('pending');
+      img.addEventListener('load', show, { once: true });
+      img.addEventListener('error', show, { once: true });
+    });
+  </script>
+
+  <!-- lightbox: click opens full size; click or Esc closes; arrow keys step through.
+       The shown image only swaps once the next one is decoded, so nothing blanks. -->
+  <script>
+    const box = document.querySelector<HTMLDialogElement>('.lightbox')!;
+    const view = box.querySelector('img')!;
+    const links = [...document.querySelectorAll<HTMLAnchorElement>('.cols-1 a.open')];
+    let at = 0;
+    let token = 0;
+
+    const preload = (href: string) => {
+      const img = new Image();
+      img.src = href;
+      return img.decode().catch(() => {});
+    };
+
+    const show = async (i: number) => {
+      at = (i + links.length) % links.length;
+      const link = links[at];
+      const t = ++token;
+
+      await preload(link.href);
+      if (t !== token) return;
+
+      view.src = link.href;
+      view.alt = link.querySelector('img')?.alt ?? '';
+
+      preload(links[(at + 1) % links.length].href);
+      preload(links[(at - 1 + links.length) % links.length].href);
+    };
+
+    const close = () => {
+      if (box.classList.contains('closing')) return;
+
+      box.classList.add('closing');
+      view.addEventListener(
+        'animationend',
+        () => {
+          box.classList.remove('closing');
+          box.close();
+        },
+        { once: true },
+      );
+    };
+
+    document.querySelectorAll<HTMLAnchorElement>('.photo-wall a.open').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+
+        e.preventDefault();
+
+        /* the wall thumbnail is already loaded: show it now, sharpen when full size decodes */
+        const thumb = link.querySelector('img');
+        view.src = thumb?.currentSrc ?? '';
+        view.alt = thumb?.alt ?? '';
+
+        box.showModal();
+        show(Number(link.dataset.i));
+      });
+    });
+
+    box.addEventListener('click', close);
+
+    box.addEventListener('cancel', (e) => {
+      e.preventDefault();
+      close();
+    });
+
+    box.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') show(at + 1);
+      if (e.key === 'ArrowLeft') show(at - 1);
+    });
+  </script>
 </Base>
+
+<style is:global>
+  /* the wall is wider than the 46rem page; clip the scrollbar-width overhang of 100vw */
+  html:has(.photo-wall) {
+    overflow-x: clip;
+  }
+
+  html:has(.lightbox[open]) {
+    overflow: hidden;
+  }
+</style>
 
 <style>
   /* Hallmark · design-system: design.md · designed-as-app */
-  /* masonry via CSS columns (no JS): one column on mobile, two from 640px;
-     captions in the portrait-figcaption voice */
-  .photo-list {
+  /* full-bleed wall: 1 / 2 / 3 columns, each rendered at build time so only one shows;
+     square corners, no chrome, photos carry the page */
+  .photo-wall {
+    --wall-gap: var(--space-md);
+
+    width: min(100vw - 2 * var(--page-gutter), 110rem);
+    margin-inline: calc(50% - min(50vw - var(--page-gutter), 55rem));
     padding-block: var(--space-xl) var(--space-2xl);
   }
 
-  .photo-list figure {
-    margin: 0 0 var(--space-lg);
-    break-inside: avoid;
+  .grid {
+    display: none;
+    gap: var(--wall-gap);
+    align-items: start;
+  }
+
+  .cols-1 {
+    display: flex;
+  }
+
+  @media (min-width: 640px) {
+    .photo-wall {
+      --wall-gap: var(--space-lg);
+    }
+
+    .cols-1 {
+      display: none;
+    }
+
+    .cols-2 {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .cols-2 {
+      display: none;
+    }
+
+    .cols-3 {
+      display: flex;
+    }
+  }
+
+  .col {
+    flex: 1;
+    min-width: 0;
+    display: grid;
+    gap: var(--wall-gap);
+  }
+
+  .col figure {
+    margin: 0;
     display: grid;
     gap: var(--space-2xs);
   }
 
-  @media (min-width: 640px) {
-    .photo-list {
-      columns: 2;
-      column-gap: var(--space-lg);
+  .col img {
+    width: 100%;
+    height: auto;
+    transition: opacity 1000ms var(--ease-in-out);
+  }
+
+  .col img:global(.pending) {
+    opacity: 0;
+  }
+
+  .col figcaption {
+    font-size: var(--text-xs);
+  }
+
+  .open {
+    display: block;
+    cursor: pointer;
+  }
+
+  /* full-viewport viewer: the page behind slowly blurs under a light paper tint */
+  .lightbox {
+    --lb-pad: max(var(--page-gutter), 5dvh);
+
+    box-sizing: border-box;
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: var(--lb-pad);
+    border: 0;
+    background: transparent;
+    cursor: default;
+  }
+
+  .lightbox[open] {
+    display: grid;
+    grid-template: 100% / 100%;
+  }
+
+  .lightbox::backdrop {
+    background: color-mix(in srgb, var(--color-paper) 60%, transparent);
+    backdrop-filter: blur(24px);
+    animation: lb-blur 800ms var(--ease-in-out);
+  }
+
+  .lightbox.closing::backdrop {
+    animation: lb-unblur 500ms var(--ease-in-out) forwards;
+  }
+
+  /* fills the padded box; contain keeps the whole photo, so thumb and full size match */
+  .lightbox img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    animation: lb-fade 500ms var(--ease-in-out);
+  }
+
+  .lightbox.closing img {
+    animation: lb-fadeout 500ms var(--ease-in-out) forwards;
+  }
+
+  @keyframes lb-blur {
+    from {
+      background: transparent;
+      backdrop-filter: blur(0);
     }
   }
 
-  .photo-list img {
-    width: 100%;
-    height: auto;
-    border-radius: var(--radius-card);
+  @keyframes lb-unblur {
+    to {
+      background: transparent;
+      backdrop-filter: blur(0);
+    }
   }
 
-  .photo-list figcaption {
-    font-size: var(--text-xs);
+  @keyframes lb-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes lb-fadeout {
+    to {
+      opacity: 0;
+    }
   }
 </style>
