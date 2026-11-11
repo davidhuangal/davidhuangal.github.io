@@ -84,14 +84,40 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
     });
   </script>
 
-  <!-- lightbox: click opens full size; click or Esc closes; arrow keys step through.
+  <!-- lightbox: click opens full size; clicking the photo zooms in and out; clicking beside it
+       or Esc closes; arrow keys step through, or scroll while zoomed.
        The shown image only swaps once the next one is decoded, so nothing blanks. -->
   <script>
     const box = document.querySelector<HTMLDialogElement>('.lightbox')!;
     const view = box.querySelector('img')!;
     const links = [...document.querySelectorAll<HTMLAnchorElement>('.cols-1 a.open')];
+    const ZOOM = 2.5;
     let at = 0;
     let token = 0;
+
+    const ratio = (img: HTMLImageElement) => {
+      view.style.setProperty('--ar', String(img.naturalWidth / img.naturalHeight));
+    };
+
+    const unzoom = () => {
+      box.classList.remove('zoomed');
+      view.style.width = '';
+      box.scrollTo(0, 0);
+    };
+
+    /* zoom keeps the clicked point of the photo under the cursor */
+    const zoom = (e: MouseEvent) => {
+      const fit = view.getBoundingClientRect();
+      const fx = (e.clientX - fit.left) / fit.width;
+      const fy = (e.clientY - fit.top) / fit.height;
+
+      if (!box.classList.toggle('zoomed')) return unzoom();
+
+      view.style.width = `${fit.width * ZOOM}px`;
+
+      const big = view.getBoundingClientRect();
+      box.scrollBy(big.left + fx * big.width - e.clientX, big.top + fy * big.height - e.clientY);
+    };
 
     const preload = (href: string) => {
       const img = new Image();
@@ -107,7 +133,9 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
       await preload(link.href);
       if (t !== token) return;
 
+      unzoom();
       view.src = link.href;
+      view.decode().then(() => t === token && ratio(view), () => {});
       view.alt = link.querySelector('img')?.alt ?? '';
 
       preload(links[(at + 1) % links.length].href);
@@ -138,13 +166,15 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
         const thumb = link.querySelector('img');
         view.src = thumb?.currentSrc ?? '';
         view.alt = thumb?.alt ?? '';
+        if (thumb) ratio(thumb);
+        unzoom();
 
         box.showModal();
         show(Number(link.dataset.i));
       });
     });
 
-    box.addEventListener('click', close);
+    box.addEventListener('click', (e) => (e.target === view ? zoom(e) : close()));
 
     box.addEventListener('cancel', (e) => {
       e.preventDefault();
@@ -152,6 +182,8 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
     });
 
     box.addEventListener('keydown', (e) => {
+      if (box.classList.contains('zoomed')) return;
+
       if (e.key === 'ArrowRight') show(at + 1);
       if (e.key === 'ArrowLeft') show(at - 1);
     });
@@ -159,6 +191,11 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
 </Base>
 
 <style is:global>
+  /* keep the scrollbar's space when the lightbox locks scrolling, so the wall doesn't reflow */
+  html {
+    scrollbar-gutter: stable;
+  }
+
   html:has(.lightbox[open]) {
     overflow: hidden;
   }
@@ -247,15 +284,20 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
     max-width: none;
     max-height: none;
     margin: 0;
-    padding: var(--lb-pad);
+    padding: 0;
     border: 0;
     background: transparent;
+    overflow: hidden;
     cursor: default;
+    container-type: size;
   }
 
   .lightbox[open] {
-    display: grid;
-    grid-template: 100% / 100%;
+    display: flex;
+  }
+
+  .lightbox.zoomed {
+    overflow: auto;
   }
 
   .lightbox::backdrop {
@@ -268,12 +310,20 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
     animation: lb-unblur 500ms var(--ease-in-out) forwards;
   }
 
-  /* fills the padded box; contain keeps the whole photo, so thumb and full size match */
+  /* sized to the photo itself, as large as fits inside --lb-pad, so clicks beside it miss it.
+     The pad is in the math, not on the dialog: Firefox keeps stale cq units when padding changes.
+     --ar is set from the image; auto margins center it and stay scrollable when zoomed */
   .lightbox img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    flex: none;
+    width: min(100cqw - 2 * var(--lb-pad), (100cqh - 2 * var(--lb-pad)) * var(--ar, 1.5));
+    aspect-ratio: var(--ar, 1.5);
+    margin: auto;
+    cursor: zoom-in;
     animation: lb-fade 500ms var(--ease-in-out);
+  }
+
+  .lightbox.zoomed img {
+    cursor: zoom-out;
   }
 
   .lightbox.closing img {
