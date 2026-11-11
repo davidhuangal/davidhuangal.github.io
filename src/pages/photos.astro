@@ -159,6 +159,11 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
 </Base>
 
 <style is:global>
+  /* keep the scrollbar's space when the lightbox locks scrolling, so the wall doesn't reflow */
+  html {
+    scrollbar-gutter: stable;
+  }
+
   html:has(.lightbox[open]) {
     overflow: hidden;
   }
