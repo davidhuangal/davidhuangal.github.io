@@ -45,7 +45,7 @@ const groups = [
     groups.map((group) => (
       <section aria-labelledby={`h-${group.heading}-${group.sub}`.replace(/\s+/g, '-').toLowerCase()}>
         <h2 id={`h-${group.heading}-${group.sub}`.replace(/\s+/g, '-').toLowerCase()}>
-          {group.heading} <span class="group-sub muted">({group.sub})</span>
+          {group.heading} <span class="group-sub">({group.sub})</span>
         </h2>
         <ul class="doc-list">
           {group.notes.map((note) => (
@@ -62,18 +62,7 @@ const groups = [
 </Base>
 
 <style>
-  /* Hallmark · design-system: design.md · designed-as-app */
   .intro {
-    padding-top: var(--space-xl);
-    max-width: var(--measure);
-  }
-
-  .intro p {
-    margin: 0;
-  }
-
-  .group-sub {
-    font-size: var(--text-base);
-    font-weight: 400;
+    max-width: var(--col);
   }
 </style>

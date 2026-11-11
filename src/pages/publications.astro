@@ -23,7 +23,7 @@ const sections = [
     sections.map((section) => (
       <section aria-labelledby={`h-${section.heading.toLowerCase()}`}>
         <h2 id={`h-${section.heading.toLowerCase()}`}>
-          {section.heading} <span class="count tnum muted">({section.pubs.length})</span>
+          {section.heading} <span class="count tnum">({section.pubs.length})</span>
         </h2>
         <ol class="doc-list">
           {section.pubs.map((pub) => (
@@ -45,7 +45,7 @@ const sections = [
     ))
   }
   <section aria-labelledby="h-talks">
-    <h2 id="h-talks">Talks <span class="count tnum muted">({talks.length})</span></h2>
+    <h2 id="h-talks">Talks <span class="count tnum">({talks.length})</span></h2>
     <ol class="doc-list">
       {
         talks.map((talk) => (
@@ -63,27 +63,7 @@ const sections = [
 </Base>
 
 <style>
-  /* Hallmark · design-system: design.md · designed-as-app */
-  .intro {
-    padding-top: var(--space-xl);
-  }
-
-  .count {
-    font-weight: 400;
-    font-size: var(--text-base);
-  }
-
-  .doc-list {
-    list-style: disc;
-    max-width: var(--measure);
-  }
-
-  .sub-line strong {
-    color: var(--color-ink);
-    font-weight: 600;
-  }
-
   .venue {
-    font-size: var(--text-xs);
+    font-size: var(--size-small);
   }
 </style>

@@ -14,7 +14,7 @@ import { projects } from '../data/projects';
         projects.map((project) => (
           <li>
             <a href={project.url}>{project.name}</a>
-            <span class="meta muted"> · {project.meta}</span>
+            <span class="meta"> · {project.meta}</span>
             <span class="sub-line">{project.description}</span>
           </li>
         ))
@@ -22,19 +22,3 @@ import { projects } from '../data/projects';
     </ul>
   </section>
 </Base>
-
-<style>
-  /* Hallmark · design-system: design.md · designed-as-app */
-  .intro {
-    padding-top: var(--space-xl);
-    max-width: var(--measure);
-  }
-
-  .intro h1 {
-    margin-bottom: var(--space-md);
-  }
-
-  .meta {
-    font-size: var(--text-sm);
-  }
-</style>
