@@ -54,11 +54,11 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
                       src={photo.src}
                       alt={photo.alt}
                       widths={[640, 960, 1400, 1920]}
-                      sizes="(min-width: 1100px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      sizes="(min-width: 1280px) 28vw, (min-width: 900px) 38vw, 100vw"
                       loading="lazy"
                     />
                   </a>
-                  {photo.caption && <figcaption class="muted">{photo.caption}</figcaption>}
+                  {photo.caption && <figcaption>{photo.caption}</figcaption>}
                 </figure>
               ))}
             </div>
@@ -159,26 +159,16 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
 </Base>
 
 <style is:global>
-  /* the wall is wider than the 46rem page; clip the scrollbar-width overhang of 100vw */
-  html:has(.photo-wall) {
-    overflow-x: clip;
-  }
-
   html:has(.lightbox[open]) {
     overflow: hidden;
   }
 </style>
 
 <style>
-  /* Hallmark · design-system: design.md · designed-as-app */
-  /* full-bleed wall: 1 / 2 / 3 columns, each rendered at build time so only one shows;
+  /* wall: 1 / 2 / 3 columns, each rendered at build time so only one shows;
      square corners, no chrome, photos carry the page */
   .photo-wall {
-    --wall-gap: var(--space-md);
-
-    width: min(100vw - 2 * var(--page-gutter), 110rem);
-    margin-inline: calc(50% - min(50vw - var(--page-gutter), 55rem));
-    padding-block: var(--space-xl) var(--space-2xl);
+    --wall-gap: 16px;
   }
 
   .grid {
@@ -191,9 +181,9 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
     display: flex;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 900px) {
     .photo-wall {
-      --wall-gap: var(--space-lg);
+      --wall-gap: 24px;
     }
 
     .cols-1 {
@@ -205,7 +195,7 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
     }
   }
 
-  @media (min-width: 1100px) {
+  @media (min-width: 1280px) {
     .cols-2 {
       display: none;
     }
@@ -225,7 +215,7 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
   .col figure {
     margin: 0;
     display: grid;
-    gap: var(--space-2xs);
+    gap: 4px;
   }
 
   .col img {
@@ -239,7 +229,7 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
   }
 
   .col figcaption {
-    font-size: var(--text-xs);
+    font-size: var(--size-small);
   }
 
   .open {

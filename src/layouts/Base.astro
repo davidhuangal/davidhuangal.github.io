@@ -1,24 +1,21 @@
 ---
+import '@fontsource/instrument-sans/400.css';
+import '@fontsource/instrument-sans/600.css';
+import '@fontsource/ibm-plex-mono/400.css';
 import '../styles/global.css';
 import portrait from '../assets/david.jpg';
 
 interface Props {
   title: string;
   description: string;
+  /* homepage: adds the shuffle button and lets the page lay out <main> itself */
+  home?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, home = false } = Astro.props;
 const ogImage = new URL(portrait.src, Astro.site);
-const nav = [
-  { href: '/', label: 'Home' },
-  { href: '/publications/', label: 'Publications' },
-  { href: '/projects/', label: 'Projects' },
-  { href: '/notes/', label: 'Paper Notes' },
-  { href: '/photos/', label: 'Photos' },
-];
 const { pathname } = Astro.url;
-const isCurrent = (href: string) =>
-  href === '/' ? pathname === '/' : pathname.startsWith(href);
+const current = (href: string) => (pathname === href ? 'page' : undefined);
 const year = new Date().getFullYear();
 ---
 
@@ -32,7 +29,6 @@ const year = new Date().getFullYear();
     <meta name="google-site-verification" content="aEwx-MHdNB2UcFR8_J9RR0fnxfcpdJQIz8MNDmZzXrA" />
     <link rel="canonical" href={new URL(pathname, Astro.site)} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="alternate" type="application/rss+xml" title="David Huangal · Paper Notes" href="/rss.xml" />
     <meta property="og:site_name" content="David Huangal" />
     <meta property="og:title" content={title} />
     <meta property="og:type" content="website" />
@@ -51,19 +47,18 @@ const year = new Date().getFullYear();
     </script>
   </head>
   <body>
-    <div class="page">
-      <nav class="site-nav" aria-label="Primary">
-        <ul>
-          {
-            nav.map((item) => (
-              <li>
-                <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
-                  {item.label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+    <header class="side">
+      <div class="side-top">
+        <a href="/">David Huangal</a>
+        {
+          home && (
+            <button class="shuffle" type="button" aria-label="Shuffle photo" title="Shuffle photo">
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M2.5 5.5h2.25c3.5 0 5.35 9 8.85 9h3.9M14.5 12l3 2.5-3 2.5M2.5 14.5h2.25c1.7 0 2.95-2.12 4.12-4.25C10.05 8.12 11.3 5.5 13.6 5.5h3.9M14.5 3l3 2.5-3 2.5" />
+              </svg>
+            </button>
+          )
+        }
         <button class="theme-toggle" type="button" aria-label="Theme: follow system">
           <svg
             class="icon-system"
@@ -106,47 +101,63 @@ const year = new Date().getFullYear();
             <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
           </svg>
         </button>
+      </div>
+
+      <nav class="side-nav" aria-label="Primary">
+        <a href="/publications/" aria-current={current('/publications/')}>Publications</a>
+        <a href="/projects/" aria-current={current('/projects/')}>Projects</a>
+        <a href="/notes/" aria-current={pathname.startsWith('/notes/') ? 'page' : undefined}>
+          Paper Notes
+        </a>
+        <a href="/photos/" aria-current={current('/photos/')}>Photos</a>
       </nav>
-      <script>
-        const root = document.documentElement;
-        const button = document.querySelector<HTMLButtonElement>('.theme-toggle')!;
-        const labels: Record<string, string> = {
-          system: 'Theme: follow system',
-          light: 'Theme: light',
-          dark: 'Theme: dark',
-        };
-        const cycle = ['system', 'light', 'dark'];
-        button.addEventListener('click', () => {
-          const current = root.dataset.theme ?? 'system';
-          const next = cycle[(cycle.indexOf(current) + 1) % cycle.length];
-          if (next === 'system') {
-            delete root.dataset.theme;
-            localStorage.removeItem('theme');
-          } else {
-            root.dataset.theme = next;
-            localStorage.setItem('theme', next);
-          }
-          button.setAttribute('aria-label', labels[next]);
-        });
-        button.setAttribute('aria-label', labels[root.dataset.theme ?? 'system']);
-      </script>
-      <main>
-        <slot />
-      </main>
-      <footer class="foot-min">
-        <p>
-          © {year} David Huangal. Built with Astro; no tracking.
-          <a href="/rss.xml">RSS</a> ·
-          <a href="https://github.com/davidhuangal">GitHub</a> ·
-          <a href="https://scholar.google.com/citations?user=C8obXZcAAAAJ&hl=en">Google Scholar</a> ·
+
+      <details class="contact">
+        <summary>Contact</summary>
+        <div class="sub">
+          <a href="mailto:davidbhuangal@gmail.com">Email</a>
+          <a href="https://github.com/davidhuangal">GitHub</a>
+          <a href="https://scholar.google.com/citations?user=C8obXZcAAAAJ&hl=en">Scholar</a>
           <a href="https://www.linkedin.com/in/david-huangal/">LinkedIn</a>
-        </p>
+        </div>
+      </details>
+    </header>
+
+    <script>
+      const root = document.documentElement;
+      const button = document.querySelector<HTMLButtonElement>('.theme-toggle')!;
+      const labels: Record<string, string> = {
+        system: 'Theme: follow system',
+        light: 'Theme: light',
+        dark: 'Theme: dark',
+      };
+      const cycle = ['system', 'light', 'dark'];
+      button.addEventListener('click', () => {
+        const current = root.dataset.theme ?? 'system';
+        const next = cycle[(cycle.indexOf(current) + 1) % cycle.length];
+        if (next === 'system') {
+          delete root.dataset.theme;
+          localStorage.removeItem('theme');
+        } else {
+          root.dataset.theme = next;
+          localStorage.setItem('theme', next);
+        }
+        button.setAttribute('aria-label', labels[next]);
+      });
+      button.setAttribute('aria-label', labels[root.dataset.theme ?? 'system']);
+    </script>
+
+    <main class:list={{ home }}>
+      <slot />
+
+      <footer class="legal">
+        <p>© {year} David Huangal. Built with Astro; no tracking.</p>
         <p>
           The views and opinions expressed on this website are solely those of the author and do not
           necessarily reflect the official policy, position, or opinions of any other individual,
           organization, employer, or company the author may be affiliated with.
         </p>
       </footer>
-    </div>
+    </main>
   </body>
 </html>

@@ -1,8 +1,7 @@
-/* Hallmark · genre: editorial · macrostructure: Long Document · theme: studied-DNA (source: https://jxmo.io/) · design-system: design.md · designed-as-app
- * paper oklch(100% 0 0) · accent moss oklch(42% 0.08 145) — source #9B0000 swapped to moss at user request
- * type: single system-grotesk family, weight-led hierarchy (headings 800 at 1.4–1.8em) · nav: bare text row · footer: minimal end-matter (design.md variant)
- * studied: yes · DNA-source: url (https://jxmo.io/)
- * Hallmark · pre-emit critique: P4 H5 E4 S4 R5 V4 */
+/* Hallmark · genre: editorial · macrostructure: fixed sidebar plus one text column · theme: studied-DNA (source: https://haeinjung.com/) · design-system: design.md
+ * paper oklch(100% 0 0) · moss oklch(42% 0.08 145) is the only ink
+ * type: Instrument Sans at one size, hierarchy from uppercase and spacing · nav: sidebar text links · footer: © line and legal
+ * studied: yes · DNA-source: url (https://haeinjung.com/) */
 
 :root {
   /* paper + ink — plain white, weight does the work; moss accent is the only color */
@@ -18,11 +17,11 @@
   /* figure plate stays light in both schemes — paper figures are drawn on white */
   --color-figure-bg: oklch(99% 0 0);
 
-  /* type — single family is the design; mono only for code */
-  --font-body: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
+  /* type — one self-hosted sans for everything; a self-hosted mono only for code */
+  --font-body: 'Instrument Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
   --font-display: var(--font-body);
-  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   /* scale — deliberately flat: hierarchy comes from weight 800, not size */
   --text-xs: 0.75rem;

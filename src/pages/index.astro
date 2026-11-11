@@ -1,18 +1,21 @@
 ---
-import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import Base from '../layouts/Base.astro';
 import portrait from '../assets/david.jpg';
-import { publications } from '../data/publications';
-import { projects } from '../data/projects';
+import { photos } from '../data/photos';
 
-const notes = (await getCollection('notes')).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
-const recentNotes = notes
-  .slice(0, 5)
-  .sort((a, b) => b.data.paperYear - a.data.paperYear);
-const selected = publications.filter((p) => p.selected).sort((a, b) => b.year - a.year);
+const CARD_W = 840;
+
+const toCard = async (src: ImageMetadata, alt: string) => {
+  const img = await getImage({ src, width: Math.min(CARD_W, src.width), format: 'webp' });
+
+  return { src: img.src, w: src.width, h: src.height, alt };
+};
+
+const first = await toCard(portrait, 'David Huangal smiling in a garden');
+const cards = await Promise.all(photos.map((photo) => toCard(photo.src, photo.alt)));
+const deck = JSON.stringify(cards).replace(/</g, '\\u003c');
 
 const personSchema = {
   '@context': 'https://schema.org',
@@ -40,176 +43,195 @@ const personSchema = {
 ---
 
 <Base
+  home
   title="David Huangal"
   description="David Huangal - Applied Scientist at the University of Missouri's Center for Geospatial Intelligence. Paper notes, publications, and projects on semantic segmentation and remote sensing."
 >
   <script type="application/ld+json" set:html={JSON.stringify(personSchema)} is:inline />
-  <section class="intro">
-    <figure class="portrait-fig">
-      <Image
-        class="portrait"
-        src={portrait}
-        alt="David Huangal smiling in a garden"
-        widths={[261, 522]}
-        sizes="(min-width: 640px) 13rem, 12rem"
-        loading="eager"
-      />
-      <figcaption class="muted">🎞️ Kodak Ultramax 400</figcaption>
-    </figure>
-    <div class="intro-text">
-      <h1>David Huangal</h1>
-      <p>
-        I work as an applied scientist in computer vision at the University of Missouri's
-        Center for Geospatial Intelligence, where my official appointment is Senior Research
-        Specialist. My work focuses on building accurate,
-        efficient AI systems that operate at scale. Much of my research has involved classification,
-        segmentation, and object detection in satellite and aerial imagery, and
-        my broader interests include vision-language models, model evaluation, and machine
-        learning deployment.
-      </p>
-      <p>
-        I earned both my bachelor's degree and Ph.D. in Computer Science from the University of
-        Missouri - Columbia.
-      </p>
-      <p>
-        You can find me on GitHub at <a href="https://github.com/davidhuangal">davidhuangal</a>, on
-        <a href="https://scholar.google.com/citations?user=C8obXZcAAAAJ&hl=en">Google Scholar</a>,
-        or on <a href="https://www.linkedin.com/in/david-huangal/">LinkedIn</a>. The best way to
-        reach me is <a href="mailto:davidbhuangal@gmail.com">davidbhuangal@gmail.com</a>.
-      </p>
-    </div>
-  </section>
 
-  <hr />
+  <h1>Hi, my name is David Huangal.</h1>
 
-  <section aria-labelledby="h-pubs">
-    <h2 id="h-pubs">Selected Publications</h2>
-    <ul class="doc-list">
-      {
-        selected.map((pub) => (
-          <li>
-            <span class="tnum">[{pub.year}]</span> <a href={pub.url}>{pub.title}</a>
-            <span class="sub-line">
-              {pub.authors.map((author, i) => (
-                <>
-                  {i > 0 && ', '}
-                  {author === 'David Huangal' ? <strong>{author}</strong> : author}
-                </>
-              ))}
-            </span>
-            <span class="sub-line venue">{pub.venue}</span>
-          </li>
-        ))
+  <figure class="stage">
+    <img class="card" src={first.src} alt={first.alt} width={first.w} height={first.h} />
+  </figure>
+
+  <div class="statement">
+    <p>
+      I work as an applied scientist in computer vision at the University of Missouri's Center for
+      Geospatial Intelligence, where my official appointment is Senior Research Specialist.
+    </p>
+    <p>
+      My work focuses on building accurate, efficient AI systems that operate at scale. Much of my
+      research has involved classification, segmentation, and object detection in satellite and
+      aerial imagery, and my broader interests include vision-language models, model evaluation,
+      and machine learning deployment.
+    </p>
+    <p>
+      I earned both my bachelor's degree and Ph.D. in Computer Science from the University of
+      Missouri - Columbia.
+    </p>
+    <p>
+      Here you can find my <a href="/publications/">publications</a>,
+      <a href="/projects/">projects</a>, <a href="/notes/">paper notes</a>, and
+      <a href="/photos/">photographs</a>.
+    </p>
+  </div>
+
+  <script type="application/json" id="deck" set:html={deck} />
+
+  <!-- the sidebar's shuffle button swaps in a random photo once it has loaded -->
+  <script>
+    interface Card {
+      src: string;
+      w: number;
+      h: number;
+      alt: string;
+    }
+
+    const deck: Card[] = JSON.parse(document.getElementById('deck')!.textContent!);
+    const stage = document.querySelector<HTMLElement>('.stage')!;
+    const image = stage.querySelector('img')!;
+    const shuffle = document.querySelector<HTMLButtonElement>('.shuffle')!;
+
+    const pick = <T,>(items: T[], last?: T) => {
+      let item = items[Math.floor(Math.random() * items.length)];
+
+      while (items.length > 1 && item === last) {
+        item = items[Math.floor(Math.random() * items.length)];
       }
-    </ul>
-    <p class="link-cta"><a href="/publications/">All {publications.length} publications →</a></p>
-  </section>
 
-  <hr />
+      return item;
+    };
 
-  <section aria-labelledby="h-projects">
-    <h2 id="h-projects">Projects</h2>
-    <ul class="doc-list">
-      {
-        projects.map((project) => (
-          <li>
-            <a href={project.url}>{project.name}</a>
-            <span class="meta muted"> · {project.meta}</span>
-            <span class="sub-line">{project.description}</span>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+    let photo: Card | undefined;
 
-  <hr />
+    const deal = () => {
+      const next = (photo = pick(deck, photo));
+      const loader = new Image();
 
-  <section aria-labelledby="h-notes">
-    <h2 id="h-notes">Paper Notes</h2>
-    <ul class="doc-list">
-      {
-        recentNotes.map((note) => (
-          <li>
-            <span class="tnum">[{note.data.paperYear}]</span>{' '}
-            <a href={`/notes/${note.id}/`}>{note.data.title}</a>
-          </li>
-        ))
-      }
-    </ul>
-    <p class="link-cta"><a href="/notes/">All {notes.length} notes, by topic →</a></p>
-  </section>
+      stage.classList.add('is-loading');
+
+      loader.onload = () => {
+        image.src = next.src;
+        image.alt = next.alt;
+        image.width = next.w;
+        image.height = next.h;
+        stage.classList.remove('is-loading');
+      };
+
+      loader.onerror = () => stage.classList.remove('is-loading');
+      loader.src = next.src;
+    };
+
+    shuffle.addEventListener('click', deal);
+  </script>
 </Base>
 
 <style>
-  /* Hallmark · design-system: design.md · designed-as-app */
-  /* split diptych: bio left, portrait right; stacks with the photo on top on mobile */
-  .intro {
-    padding-top: var(--space-xl);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-lg);
-  }
-
-  .portrait-fig {
-    margin: 0;
-    flex-shrink: 0;
+  /* text left, photo right; the photo takes the height of the text column */
+  :global(main.home) {
     display: grid;
-    gap: var(--space-2xs);
-    justify-items: center;
+    grid-template-columns: minmax(0, 560px) minmax(0, 420px);
+    grid-template-areas:
+      'hello card'
+      'text  card'
+      'legal card';
+    gap: 24px clamp(32px, 6vw, 96px);
+    align-items: start;
   }
 
-  .portrait {
-    width: 12rem;
+  :global(main.home .legal) {
+    grid-area: legal;
+    margin-top: 24px;
+  }
+
+  h1 {
+    grid-area: hello;
+    margin: 0;
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+
+  .statement {
+    grid-area: text;
+  }
+
+  .statement p + p {
+    margin-top: 1em;
+  }
+
+  .stage {
+    position: relative;
+    grid-area: card;
+    align-self: stretch;
+    transition: opacity 140ms var(--ease-out);
+  }
+
+  .stage:global(.is-loading) {
+    opacity: 0.38;
+  }
+
+  /* out of flow, so the text sets the row height and the photo matches it */
+  .card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 100%;
     max-width: 100%;
-    height: auto;
-    border-radius: var(--radius-card);
+    object-fit: cover;
   }
 
-  .portrait-fig figcaption {
-    font-size: var(--text-xs);
+  :global(.shuffle) {
+    all: unset;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    cursor: pointer;
+    transition: transform 140ms var(--ease-out);
   }
 
-  .intro-text {
-    flex: 1;
-    min-width: 0;
-    max-width: var(--measure);
+  :global(.shuffle:active) {
+    transform: scale(0.94);
   }
 
-  .intro-text p {
-    margin: 0 0 var(--space-md);
+  :global(.shuffle:focus-visible) {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
   }
 
-  .intro-text p:last-child {
-    margin-bottom: 0;
+  :global(.shuffle svg) {
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.25;
+    stroke-linecap: square;
   }
 
-  .meta {
-    font-size: var(--text-sm);
-  }
-
-  .sub-line strong {
-    color: var(--color-ink);
-    font-weight: 600;
-  }
-
-  .venue {
-    font-size: var(--text-xs);
-  }
-
-  @media (min-width: 640px) {
-    .intro {
-      flex-direction: row-reverse;
-      align-items: flex-start;
-      gap: var(--space-xl);
+  @media (max-width: 1180px) {
+    :global(main.home) {
+      grid-template-columns: minmax(0, 560px);
+      grid-template-areas:
+        'hello'
+        'card'
+        'text'
+        'legal';
     }
 
-    .portrait-fig {
-      margin-top: var(--space-sm);
+    .stage {
+      width: min(100%, 420px);
     }
 
-    .portrait {
-      width: 13rem;
+    .card {
+      position: static;
+      display: block;
+      width: 100%;
+      height: auto;
     }
   }
 </style>

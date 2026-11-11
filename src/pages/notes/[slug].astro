@@ -33,7 +33,7 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
         {note.data.paperTitle}
         {note.data.paperAuthors && <span class="authors"> — {note.data.paperAuthors}</span>}
       </p>
-      <p class="note-meta muted">
+      <p class="note-meta">
         Paper {note.data.paperYear} · {topicLabel} · Notes,{' '}
         <time datetime={note.data.date.toISOString()}>{dateFmt.format(note.data.date)}</time>
       </p>
@@ -46,36 +46,23 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
 </Base>
 
 <style>
-  /* Hallmark · design-system: design.md · designed-as-app */
   .note-head {
-    padding-block: var(--space-xl) var(--space-lg);
-    border-bottom: var(--rule-hair) solid var(--color-rule);
-    max-width: var(--measure);
+    max-width: 640px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--rule);
   }
 
   .note-head h1 {
-    margin: 0 0 var(--space-xs);
-    font-size: var(--text-2xl);
-  }
-
-  .paper-title {
-    margin: 0 0 var(--space-sm);
-    font-size: var(--text-md);
-    line-height: 1.4;
-    color: var(--color-muted);
-  }
-
-  .authors {
-    color: var(--color-neutral);
-    font-size: var(--text-base);
+    margin-bottom: 8px;
   }
 
   .note-meta {
-    margin: 0;
-    font-size: var(--text-sm);
+    margin-top: 8px;
+    font-size: var(--size-small);
   }
 
   .back {
-    margin-block: var(--space-2xl) 0;
+    margin-top: 64px;
   }
 </style>
