@@ -8,14 +8,27 @@ import { byMonth } from '../data/colorSort';
 const ORDER: 'date' | 'month' = 'month';
 const list = ORDER === 'month' ? await byMonth(photos) : photos;
 
-/* full-size webp per photo for the lightbox; i is the viewing order */
-type Item = { photo: Photo; i: number; full: string };
+/* two webps per photo for the lightbox: `full` fits the screen, `zoom` is every source pixel
+   and only loads on zoom; i is the viewing order.
+   w and h come from getImage, not from photo.src: reading a property of an imported image
+   makes Astro ship the original file too */
+const FIT = 2400;
+
+type Item = { photo: Photo; i: number; full: string; zoom: string; w: number; h: number };
 const items: Item[] = await Promise.all(
-  list.map(async (photo, i) => ({
-    photo,
-    i,
-    full: (await getImage({ src: photo.src, format: 'webp' })).src,
-  })),
+  list.map(async (photo, i) => {
+    const zoom = await getImage({ src: photo.src, format: 'webp', quality: 85 });
+    const full = await getImage({ src: photo.src, width: FIT, fit: 'inside', format: 'webp' });
+
+    return {
+      photo,
+      i,
+      full: full.src,
+      zoom: zoom.src,
+      w: Number(zoom.attributes.width),
+      h: Number(zoom.attributes.height),
+    };
+  }),
 );
 
 /* Greedy shortest-column split, so order reads left to right at every column count. */
@@ -25,7 +38,7 @@ const split = (n: number) => {
   for (const item of items) {
     const col = cols.reduce((a, b) => (b.h < a.h ? b : a));
     col.items.push(item);
-    col.h += item.photo.src.height / item.photo.src.width;
+    col.h += item.h / item.w;
   }
 
   return cols.map((col) => col.items);
@@ -47,9 +60,9 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
         <div class={`grid cols-${n}`}>
           {cols.map((col) => (
             <div class="col">
-              {col.map(({ photo, i, full }) => (
+              {col.map(({ photo, i, full, zoom, w }) => (
                 <figure>
-                  <a class="open" href={full} data-i={i}>
+                  <a class="open" href={full} data-i={i} data-zoom={zoom} data-w={w}>
                     <Image
                       src={photo.src}
                       alt={photo.alt}
@@ -86,17 +99,27 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
 
   <!-- lightbox: click opens full size; clicking the photo zooms in and out; clicking beside it
        or Esc closes; arrow keys step through, or scroll while zoomed.
+       Zoom stops at the source's own pixels, so it never upscales; small sources don't zoom.
        The shown image only swaps once the next one is decoded, so nothing blanks. -->
   <script>
     const box = document.querySelector<HTMLDialogElement>('.lightbox')!;
     const view = box.querySelector('img')!;
     const links = [...document.querySelectorAll<HTMLAnchorElement>('.cols-1 a.open')];
     const ZOOM = 2.5;
+    const MIN_ZOOM = 1.2;
     let at = 0;
     let token = 0;
 
+    /* zoomed width in CSS px: one source pixel per device pixel, at most ZOOM times the fit */
+    const zoomWidth = (fit: number) =>
+      Math.min(fit * ZOOM, Number(links[at].dataset.w) / devicePixelRatio);
+
     const ratio = (img: HTMLImageElement) => {
       view.style.setProperty('--ar', String(img.naturalWidth / img.naturalHeight));
+      if (box.classList.contains('zoomed')) return;
+
+      const fit = view.getBoundingClientRect().width;
+      box.classList.toggle('zoomable', zoomWidth(fit) >= fit * MIN_ZOOM);
     };
 
     const unzoom = () => {
@@ -111,12 +134,22 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
       const fx = (e.clientX - fit.left) / fit.width;
       const fy = (e.clientY - fit.top) / fit.height;
 
-      if (!box.classList.toggle('zoomed')) return unzoom();
+      if (box.classList.contains('zoomed')) return unzoom();
+      if (!box.classList.contains('zoomable')) return;
 
-      view.style.width = `${fit.width * ZOOM}px`;
+      box.classList.add('zoomed');
+      view.style.width = `${zoomWidth(fit.width)}px`;
 
       const big = view.getBoundingClientRect();
       box.scrollBy(big.left + fx * big.width - e.clientX, big.top + fy * big.height - e.clientY);
+
+      /* the fit image is stretched for a moment; sharpen once every pixel has decoded */
+      const t = token;
+      const href = links[at].dataset.zoom!;
+
+      preload(href).then(() => {
+        if (t === token && box.classList.contains('zoomed')) view.src = href;
+      });
     };
 
     const preload = (href: string) => {
@@ -126,6 +159,7 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
     };
 
     const show = async (i: number) => {
+      unzoom();
       at = (i + links.length) % links.length;
       const link = links[at];
       const t = ++token;
@@ -133,7 +167,9 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
       await preload(link.href);
       if (t !== token) return;
 
-      unzoom();
+      /* already zoomed on the thumbnail: the zoom image is on its way, don't swap under it */
+      if (box.classList.contains('zoomed')) return;
+
       view.src = link.href;
       view.decode().then(() => t === token && ratio(view), () => {});
       view.alt = link.querySelector('img')?.alt ?? '';
@@ -166,6 +202,7 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
         const thumb = link.querySelector('img');
         view.src = thumb?.currentSrc ?? '';
         view.alt = thumb?.alt ?? '';
+        at = Number(link.dataset.i);
         if (thumb) ratio(thumb);
         unzoom();
 
@@ -318,8 +355,11 @@ const layouts = [1, 2, 3].map((n) => ({ n, cols: split(n) }));
     width: min(100cqw - 2 * var(--lb-pad), (100cqh - 2 * var(--lb-pad)) * var(--ar, 1.5));
     aspect-ratio: var(--ar, 1.5);
     margin: auto;
-    cursor: zoom-in;
     animation: lb-fade 500ms var(--ease-in-out);
+  }
+
+  .lightbox.zoomable img {
+    cursor: zoom-in;
   }
 
   .lightbox.zoomed img {

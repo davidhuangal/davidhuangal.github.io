@@ -7,10 +7,12 @@ import { photos } from '../data/photos';
 
 const CARD_W = 840;
 
+/* sizes come from getImage, not from `src`: reading a property of an imported image makes
+   Astro ship the original file too. fit: 'inside' keeps small images from being enlarged */
 const toCard = async (src: ImageMetadata, alt: string) => {
-  const img = await getImage({ src, width: Math.min(CARD_W, src.width), format: 'webp' });
+  const img = await getImage({ src, width: CARD_W, fit: 'inside', format: 'webp' });
 
-  return { src: img.src, w: src.width, h: src.height, alt };
+  return { src: img.src, w: img.attributes.width, h: img.attributes.height, alt };
 };
 
 const first = await toCard(portrait, 'David Huangal smiling in a garden');
