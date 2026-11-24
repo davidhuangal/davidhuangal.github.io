@@ -25,10 +25,11 @@ const personSchema = {
   name: 'David Huangal',
   url: 'https://davidhuangal.github.io/',
   image: new URL(portrait.src, Astro.site).href,
-  jobTitle: 'Senior Research Specialist',
+  jobTitle: 'Senior Data Scientist',
   worksFor: {
     '@type': 'Organization',
-    name: "University of Missouri Center for Geospatial Intelligence",
+    name: 'Surescripts',
+    url: 'https://surescripts.com/',
   },
   alumniOf: {
     '@type': 'CollegeOrUniversity',
@@ -47,7 +48,7 @@ const personSchema = {
 <Base
   home
   title="David Huangal"
-  description="David Huangal - Applied Scientist at the University of Missouri's Center for Geospatial Intelligence. Paper notes, publications, and projects on semantic segmentation and remote sensing."
+  description="David Huangal - Senior Data Scientist at Surescripts. Paper notes, publications, and projects on semantic segmentation and remote sensing."
 >
   <script type="application/ld+json" set:html={JSON.stringify(personSchema)} is:inline />
 
@@ -59,14 +60,17 @@ const personSchema = {
 
   <div class="statement">
     <p>
-      I work as an applied scientist in computer vision at the University of Missouri's Center for
-      Geospatial Intelligence, where my official appointment is Senior Research Specialist.
+      I'm a Senior Data Scientist at Surescripts, working on machine learning and AI for healthcare
+      at scale.
     </p>
     <p>
-      My work focuses on building accurate, efficient AI systems that operate at scale. Much of my
-      research has involved classification, segmentation, and object detection in satellite and
-      aerial imagery, and my broader interests include vision-language models, model evaluation,
-      and machine learning deployment.
+      Previously, I was the AI/ML technical lead at the University of Missouri's Center for
+      Geospatial Intelligence, where I worked on classification, segmentation, and object detection
+      in satellite and aerial imagery.
+    </p>
+    <p>
+      I like building accurate, efficient AI systems. My interests include vision-language models,
+      model evaluation, and machine learning deployment.
     </p>
     <p>
       I earned both my bachelor's degree and Ph.D. in Computer Science from the University of
